@@ -1,36 +1,29 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class MysqlConnector {
 
-	public static void main(String[] args) {
+	public Connection getConnection() {
 		try {
 
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-			Connection con = DriverManager.getConnection(
-					"jdbc:mysql://brocode.ch/jtodo", "dbajtodo", "blubb");
+			// config for database
+			String dbname = "jtodo";
+			String dbhost = "brocode.ch";
+			String dbuser = "dbajtodo";
+			String dbpw = "blubb";
 
-			con.setReadOnly(true);
+			// db connection
+			Connection dbconnection = DriverManager.getConnection(
+					"jdbc:mysql://" + dbhost + "/" + dbname + "", "" + dbuser
+							+ "", "" + dbpw + "");
 
-			Statement stmt = con.createStatement();
-
-			ResultSet rs = stmt.executeQuery("Select * from foo");
-
-			while (rs.next()) {
-
-				System.out.println(rs.getString(1) + " " + rs.getString(2));
-
-			}
-
-			rs.close();
-			stmt.close();
-			con.close();
+			return dbconnection;
 
 		} catch (Exception e) {
 			System.out.println("Fehler!" + e);
+			return null;
 		}
 	}
 }
