@@ -1,4 +1,4 @@
-package ch.zhaw.jtodo.common.datamodel;
+package ch.zhaw.jtodo.dal.dao.hibernate;
 // default package
 // Generated Nov 13, 2012 5:11:22 PM by Hibernate Tools 3.1.0.beta4
 

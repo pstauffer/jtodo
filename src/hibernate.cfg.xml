@@ -21,10 +21,10 @@
     <property name="hbm2ddl.auto">validate</property>
  
     <!-- Mapping folgen hier -->
-        <mapping resource="hibernate/category.hbm.xml" />
-		<mapping resource="hibernate/priority.hbm.xml" />
-		<mapping resource="hibernate/task.hbm.xml" />
-		<mapping resource="hibernate/reminder.hbm.xml" />
+        <mapping resource="ch/zhaw/jtodo/common/datamodel/category.hbm.xml" />
+		<mapping resource="ch/zhaw/jtodo/common/datamodel/priority.hbm.xml" />
+		<mapping resource="ch/zhaw/jtodo/common/datamodel/task.hbm.xml" />
+		<mapping resource="ch/zhaw/jtodo/common/datamodel/reminder.hbm.xml" />
         
   </session-factory>
 </hibernate-configuration>
