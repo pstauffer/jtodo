@@ -1,4 +1,4 @@
-package ch.zhaw.jtodo.common;
+package ch.zhaw.jtodo.common.datamodel;
 // default package
 // Generated Nov 13, 2012 5:11:22 PM by Hibernate Tools 3.1.0.beta4
 
@@ -13,13 +13,13 @@ import org.hibernate.criterion.Example;
 
 
 /**
- * Home object for domain model class Priority.
- * @see .Priority
+ * Home object for domain model class Task.
+ * @see .Task
  * @author Hibernate Tools
  */
-public class PriorityHome {
+public class TaskHome {
 
-    private static final Log log = LogFactory.getLog(PriorityHome.class);
+    private static final Log log = LogFactory.getLog(TaskHome.class);
 
     private final SessionFactory sessionFactory = getSessionFactory();
     
@@ -33,8 +33,8 @@ public class PriorityHome {
         }
     }
     
-    public void persist(Priority transientInstance) {
-        log.debug("persisting Priority instance");
+    public void persist(Task transientInstance) {
+        log.debug("persisting Task instance");
         try {
             sessionFactory.getCurrentSession().persist(transientInstance);
             log.debug("persist successful");
@@ -45,8 +45,8 @@ public class PriorityHome {
         }
     }
     
-    public void attachDirty(Priority instance) {
-        log.debug("attaching dirty Priority instance");
+    public void attachDirty(Task instance) {
+        log.debug("attaching dirty Task instance");
         try {
             sessionFactory.getCurrentSession().saveOrUpdate(instance);
             log.debug("attach successful");
@@ -57,8 +57,8 @@ public class PriorityHome {
         }
     }
     
-    public void attachClean(Priority instance) {
-        log.debug("attaching clean Priority instance");
+    public void attachClean(Task instance) {
+        log.debug("attaching clean Task instance");
         try {
             sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
             log.debug("attach successful");
@@ -69,8 +69,8 @@ public class PriorityHome {
         }
     }
     
-    public void delete(Priority persistentInstance) {
-        log.debug("deleting Priority instance");
+    public void delete(Task persistentInstance) {
+        log.debug("deleting Task instance");
         try {
             sessionFactory.getCurrentSession().delete(persistentInstance);
             log.debug("delete successful");
@@ -81,10 +81,10 @@ public class PriorityHome {
         }
     }
     
-    public Priority merge(Priority detachedInstance) {
-        log.debug("merging Priority instance");
+    public Task merge(Task detachedInstance) {
+        log.debug("merging Task instance");
         try {
-            Priority result = (Priority) sessionFactory.getCurrentSession()
+            Task result = (Task) sessionFactory.getCurrentSession()
                     .merge(detachedInstance);
             log.debug("merge successful");
             return result;
@@ -95,11 +95,11 @@ public class PriorityHome {
         }
     }
     
-    public Priority findById( int id) {
-        log.debug("getting Priority instance with id: " + id);
+    public Task findById( int id) {
+        log.debug("getting Task instance with id: " + id);
         try {
-            Priority instance = (Priority) sessionFactory.getCurrentSession()
-                    .get("Priority", id);
+            Task instance = (Task) sessionFactory.getCurrentSession()
+                    .get("Task", id);
             if (instance==null) {
                 log.debug("get successful, no instance found");
             }
@@ -115,11 +115,11 @@ public class PriorityHome {
     }
     
     
-    public List findByExample(Priority instance) {
-        log.debug("finding Priority instance by example");
+    public List findByExample(Task instance) {
+        log.debug("finding Task instance by example");
         try {
             List results = sessionFactory.getCurrentSession()
-                    .createCriteria("Priority")
+                    .createCriteria("Task")
                     .add(Example.create(instance))
             .list();
             log.debug("find by example successful, result size: " + results.size());

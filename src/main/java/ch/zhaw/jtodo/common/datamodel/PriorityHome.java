@@ -1,4 +1,4 @@
-package ch.zhaw.jtodo.common;
+package ch.zhaw.jtodo.common.datamodel;
 // default package
 // Generated Nov 13, 2012 5:11:22 PM by Hibernate Tools 3.1.0.beta4
 
@@ -13,13 +13,13 @@ import org.hibernate.criterion.Example;
 
 
 /**
- * Home object for domain model class Reminder.
- * @see .Reminder
+ * Home object for domain model class Priority.
+ * @see .Priority
  * @author Hibernate Tools
  */
-public class ReminderHome {
+public class PriorityHome {
 
-    private static final Log log = LogFactory.getLog(ReminderHome.class);
+    private static final Log log = LogFactory.getLog(PriorityHome.class);
 
     private final SessionFactory sessionFactory = getSessionFactory();
     
@@ -33,8 +33,8 @@ public class ReminderHome {
         }
     }
     
-    public void persist(Reminder transientInstance) {
-        log.debug("persisting Reminder instance");
+    public void persist(Priority transientInstance) {
+        log.debug("persisting Priority instance");
         try {
             sessionFactory.getCurrentSession().persist(transientInstance);
             log.debug("persist successful");
@@ -45,8 +45,8 @@ public class ReminderHome {
         }
     }
     
-    public void attachDirty(Reminder instance) {
-        log.debug("attaching dirty Reminder instance");
+    public void attachDirty(Priority instance) {
+        log.debug("attaching dirty Priority instance");
         try {
             sessionFactory.getCurrentSession().saveOrUpdate(instance);
             log.debug("attach successful");
@@ -57,8 +57,8 @@ public class ReminderHome {
         }
     }
     
-    public void attachClean(Reminder instance) {
-        log.debug("attaching clean Reminder instance");
+    public void attachClean(Priority instance) {
+        log.debug("attaching clean Priority instance");
         try {
             sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
             log.debug("attach successful");
@@ -69,8 +69,8 @@ public class ReminderHome {
         }
     }
     
-    public void delete(Reminder persistentInstance) {
-        log.debug("deleting Reminder instance");
+    public void delete(Priority persistentInstance) {
+        log.debug("deleting Priority instance");
         try {
             sessionFactory.getCurrentSession().delete(persistentInstance);
             log.debug("delete successful");
@@ -81,10 +81,10 @@ public class ReminderHome {
         }
     }
     
-    public Reminder merge(Reminder detachedInstance) {
-        log.debug("merging Reminder instance");
+    public Priority merge(Priority detachedInstance) {
+        log.debug("merging Priority instance");
         try {
-            Reminder result = (Reminder) sessionFactory.getCurrentSession()
+            Priority result = (Priority) sessionFactory.getCurrentSession()
                     .merge(detachedInstance);
             log.debug("merge successful");
             return result;
@@ -95,11 +95,11 @@ public class ReminderHome {
         }
     }
     
-    public Reminder findById( int id) {
-        log.debug("getting Reminder instance with id: " + id);
+    public Priority findById( int id) {
+        log.debug("getting Priority instance with id: " + id);
         try {
-            Reminder instance = (Reminder) sessionFactory.getCurrentSession()
-                    .get("Reminder", id);
+            Priority instance = (Priority) sessionFactory.getCurrentSession()
+                    .get("Priority", id);
             if (instance==null) {
                 log.debug("get successful, no instance found");
             }
@@ -115,11 +115,11 @@ public class ReminderHome {
     }
     
     
-    public List findByExample(Reminder instance) {
-        log.debug("finding Reminder instance by example");
+    public List findByExample(Priority instance) {
+        log.debug("finding Priority instance by example");
         try {
             List results = sessionFactory.getCurrentSession()
-                    .createCriteria("Reminder")
+                    .createCriteria("Priority")
                     .add(Example.create(instance))
             .list();
             log.debug("find by example successful, result size: " + results.size());

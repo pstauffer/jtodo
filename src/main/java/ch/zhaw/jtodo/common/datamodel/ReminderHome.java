@@ -1,4 +1,4 @@
-package ch.zhaw.jtodo.common;
+package ch.zhaw.jtodo.common.datamodel;
 // default package
 // Generated Nov 13, 2012 5:11:22 PM by Hibernate Tools 3.1.0.beta4
 
@@ -13,13 +13,13 @@ import org.hibernate.criterion.Example;
 
 
 /**
- * Home object for domain model class Task.
- * @see .Task
+ * Home object for domain model class Reminder.
+ * @see .Reminder
  * @author Hibernate Tools
  */
-public class TaskHome {
+public class ReminderHome {
 
-    private static final Log log = LogFactory.getLog(TaskHome.class);
+    private static final Log log = LogFactory.getLog(ReminderHome.class);
 
     private final SessionFactory sessionFactory = getSessionFactory();
     
@@ -33,8 +33,8 @@ public class TaskHome {
         }
     }
     
-    public void persist(Task transientInstance) {
-        log.debug("persisting Task instance");
+    public void persist(Reminder transientInstance) {
+        log.debug("persisting Reminder instance");
         try {
             sessionFactory.getCurrentSession().persist(transientInstance);
             log.debug("persist successful");
@@ -45,8 +45,8 @@ public class TaskHome {
         }
     }
     
-    public void attachDirty(Task instance) {
-        log.debug("attaching dirty Task instance");
+    public void attachDirty(Reminder instance) {
+        log.debug("attaching dirty Reminder instance");
         try {
             sessionFactory.getCurrentSession().saveOrUpdate(instance);
             log.debug("attach successful");
@@ -57,8 +57,8 @@ public class TaskHome {
         }
     }
     
-    public void attachClean(Task instance) {
-        log.debug("attaching clean Task instance");
+    public void attachClean(Reminder instance) {
+        log.debug("attaching clean Reminder instance");
         try {
             sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
             log.debug("attach successful");
@@ -69,8 +69,8 @@ public class TaskHome {
         }
     }
     
-    public void delete(Task persistentInstance) {
-        log.debug("deleting Task instance");
+    public void delete(Reminder persistentInstance) {
+        log.debug("deleting Reminder instance");
         try {
             sessionFactory.getCurrentSession().delete(persistentInstance);
             log.debug("delete successful");
@@ -81,10 +81,10 @@ public class TaskHome {
         }
     }
     
-    public Task merge(Task detachedInstance) {
-        log.debug("merging Task instance");
+    public Reminder merge(Reminder detachedInstance) {
+        log.debug("merging Reminder instance");
         try {
-            Task result = (Task) sessionFactory.getCurrentSession()
+            Reminder result = (Reminder) sessionFactory.getCurrentSession()
                     .merge(detachedInstance);
             log.debug("merge successful");
             return result;
@@ -95,11 +95,11 @@ public class TaskHome {
         }
     }
     
-    public Task findById( int id) {
-        log.debug("getting Task instance with id: " + id);
+    public Reminder findById( int id) {
+        log.debug("getting Reminder instance with id: " + id);
         try {
-            Task instance = (Task) sessionFactory.getCurrentSession()
-                    .get("Task", id);
+            Reminder instance = (Reminder) sessionFactory.getCurrentSession()
+                    .get("Reminder", id);
             if (instance==null) {
                 log.debug("get successful, no instance found");
             }
@@ -115,11 +115,11 @@ public class TaskHome {
     }
     
     
-    public List findByExample(Task instance) {
-        log.debug("finding Task instance by example");
+    public List findByExample(Reminder instance) {
+        log.debug("finding Reminder instance by example");
         try {
             List results = sessionFactory.getCurrentSession()
-                    .createCriteria("Task")
+                    .createCriteria("Reminder")
                     .add(Example.create(instance))
             .list();
             log.debug("find by example successful, result size: " + results.size());
