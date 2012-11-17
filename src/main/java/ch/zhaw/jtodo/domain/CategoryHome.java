@@ -1,4 +1,4 @@
-package ch.zhaw.jtodo.dal.dao.hibernate;
+package ch.zhaw.jtodo.domain;
 // default package
 // Generated Nov 13, 2012 5:11:22 PM by Hibernate Tools 3.1.0.beta4
 
@@ -14,13 +14,13 @@ import org.hibernate.criterion.Example;
 
 
 /**
- * Home object for domain model class Reminder.
- * @see .Reminder
+ * Home object for domain model class Category.
+ * @see .Category
  * @author Hibernate Tools
  */
-public class ReminderHome {
+public class CategoryHome {
 
-    private static final Log log = LogFactory.getLog(ReminderHome.class);
+    private static final Log log = LogFactory.getLog(CategoryHome.class);
 
     private final SessionFactory sessionFactory = getSessionFactory();
     
@@ -34,8 +34,8 @@ public class ReminderHome {
         }
     }
     
-    public void persist(Reminder transientInstance) {
-        log.debug("persisting Reminder instance");
+    public void persist(Category transientInstance) {
+        log.debug("persisting Category instance");
         try {
             sessionFactory.getCurrentSession().persist(transientInstance);
             log.debug("persist successful");
@@ -46,8 +46,8 @@ public class ReminderHome {
         }
     }
     
-    public void attachDirty(Reminder instance) {
-        log.debug("attaching dirty Reminder instance");
+    public void attachDirty(Category instance) {
+        log.debug("attaching dirty Category instance");
         try {
             sessionFactory.getCurrentSession().saveOrUpdate(instance);
             log.debug("attach successful");
@@ -58,8 +58,8 @@ public class ReminderHome {
         }
     }
     
-    public void attachClean(Reminder instance) {
-        log.debug("attaching clean Reminder instance");
+    public void attachClean(Category instance) {
+        log.debug("attaching clean Category instance");
         try {
             sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
             log.debug("attach successful");
@@ -70,8 +70,8 @@ public class ReminderHome {
         }
     }
     
-    public void delete(Reminder persistentInstance) {
-        log.debug("deleting Reminder instance");
+    public void delete(Category persistentInstance) {
+        log.debug("deleting Category instance");
         try {
             sessionFactory.getCurrentSession().delete(persistentInstance);
             log.debug("delete successful");
@@ -82,10 +82,10 @@ public class ReminderHome {
         }
     }
     
-    public Reminder merge(Reminder detachedInstance) {
-        log.debug("merging Reminder instance");
+    public Category merge(Category detachedInstance) {
+        log.debug("merging Category instance");
         try {
-            Reminder result = (Reminder) sessionFactory.getCurrentSession()
+            Category result = (Category) sessionFactory.getCurrentSession()
                     .merge(detachedInstance);
             log.debug("merge successful");
             return result;
@@ -96,11 +96,11 @@ public class ReminderHome {
         }
     }
     
-    public Reminder findById( int id) {
-        log.debug("getting Reminder instance with id: " + id);
+    public Category findById( int id) {
+        log.debug("getting Category instance with id: " + id);
         try {
-            Reminder instance = (Reminder) sessionFactory.getCurrentSession()
-                    .get("Reminder", id);
+            Category instance = (Category) sessionFactory.getCurrentSession()
+                    .get("Category", id);
             if (instance==null) {
                 log.debug("get successful, no instance found");
             }
@@ -116,11 +116,11 @@ public class ReminderHome {
     }
     
     
-    public List findByExample(Reminder instance) {
-        log.debug("finding Reminder instance by example");
+    public List findByExample(Category instance) {
+        log.debug("finding Category instance by example");
         try {
             List results = sessionFactory.getCurrentSession()
-                    .createCriteria("Reminder")
+                    .createCriteria("Category")
                     .add(Example.create(instance))
             .list();
             log.debug("find by example successful, result size: " + results.size());

@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Nov 13, 2012 5:11:22 PM by Hibernate Tools 3.1.0.beta4 -->
-<hibernate-mapping>
+<hibernate-mapping package="ch.zhaw.jtodo.domain">
     <class name="Reminder" table="reminder" catalog="jtodo">
         <id name="id" type="int">
             <column name="id" />

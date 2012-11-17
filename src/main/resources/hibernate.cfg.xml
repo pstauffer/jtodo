@@ -18,13 +18,13 @@
  
      <!-- legt die struktur an, falls noch nicht da -->
      <!-- produktiv besser den wert "validate" setzen --> 
-    <property name="hbm2ddl.auto">validate</property>
+    <property name="hbm2ddl.auto">update</property>
  
     <!-- Mapping folgen hier -->
-        <mapping resource="ch/zhaw/jtodo/common/datamodel/category.hbm.xml" />
-		<mapping resource="ch/zhaw/jtodo/common/datamodel/priority.hbm.xml" />
-		<mapping resource="ch/zhaw/jtodo/common/datamodel/task.hbm.xml" />
-		<mapping resource="ch/zhaw/jtodo/common/datamodel/reminder.hbm.xml" />
+        <mapping resource="hibernate/domain/category.hbm.xml"/>
+		<mapping resource="hibernate/domain/priority.hbm.xml"/>
+		<mapping resource="hibernate/domain/task.hbm.xml"/>
+		<mapping resource="hibernate/domain/reminder.hbm.xml"/>
         
   </session-factory>
 </hibernate-configuration>
