@@ -1,4 +1,4 @@
-import ch.zhaw.jtodo.dal.CRUDService;
+import ch.zhaw.jtodo.dao.CRUDService;
 
 
 public class JtodoRunner {

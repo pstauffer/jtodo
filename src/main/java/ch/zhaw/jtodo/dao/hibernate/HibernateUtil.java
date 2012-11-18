@@ -1,4 +1,4 @@
-package ch.zhaw.jtodo.dal.hibernate;
+package ch.zhaw.jtodo.dao.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
