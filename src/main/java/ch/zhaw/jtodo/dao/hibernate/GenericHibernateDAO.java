@@ -59,9 +59,10 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	public List<T> findAll() {
 		Session session = factory.openSession();
 		Criteria criteria = session.createCriteria(this.persistentClass);
+		List<T> returnList = criteria.list();
 		session.close();
 		
-		return criteria.list();
+		return returnList;
 	}
 
 	@SuppressWarnings("unchecked")

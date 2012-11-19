@@ -26,8 +26,9 @@ public class CRUDService {
 		Category cat = new Category();
 		
 		cat.setName("test1");
+		DAOFactory factory2 = new DAOFactory(factory);
 		
-		ICategoryDAO catDAO = DAOFactory.getInstance().getCategoryDAO();
+		ICategoryDAO catDAO = factory2.getCategoryDAO();
 		 
 		try {
 			Category cat3 = catDAO.write(cat);

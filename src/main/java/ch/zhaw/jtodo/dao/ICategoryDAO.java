@@ -7,7 +7,6 @@ import ch.zhaw.jtodo.domain.Category;
  * If there are special methods needed by the CategoryDAO, this interface
  * would provide them.
  * @author yannik
- *
  */
 public interface ICategoryDAO extends IGenericDAO<Category,Integer>{
 		

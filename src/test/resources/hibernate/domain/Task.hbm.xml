@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 13, 2012 5:11:21 PM by Hibernate Tools 3.1.0.beta4 -->
+<hibernate-mapping package="ch.zhaw.jtodo.domain">
+    <class name="Task" table="task" catalog="jtodo">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+        <property name="categoryid" type="java.lang.Integer">
+            <column name="categoryid" />
+        </property>
+        <property name="priorityid" type="java.lang.Integer">
+            <column name="priorityid" />
+        </property>
+        <property name="date" type="date">
+            <column name="date" length="10" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="status" />
+        </property>
+        <property name="modifiydate" type="date">
+            <column name="modifiydate" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>
