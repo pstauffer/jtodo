@@ -1,14 +1,14 @@
-package ch.zhaw.jtodo.control;
+package ch.zhaw.jtodo.controller;
 
 import ch.zhaw.jtodo.model.JtodoModel;
 import ch.zhaw.jtodo.view.JtodoView;
 
-public class JtodoControl {
+public class GUIController {
 
 	private JtodoModel model;
 	private JtodoView view;
 
-	public JtodoControl() {
+	public GUIController() {
 		model = new JtodoModel();
 		view = new JtodoView(this);
 	}

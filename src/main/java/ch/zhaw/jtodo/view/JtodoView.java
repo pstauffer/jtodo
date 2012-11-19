@@ -8,15 +8,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-import ch.zhaw.jtodo.control.JtodoControl;
+import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.model.JtodoModel;
 
 public class JtodoView extends JFrame {
-	private JtodoControl control;
+	private GUIController control;
 	private JButton button;
 	private JTextField text;
 
-	public JtodoView(JtodoControl control) {
+	public JtodoView(GUIController control) {
 		super("MVC Test");
 		this.control = control;
 		button = new JButton("klick");
