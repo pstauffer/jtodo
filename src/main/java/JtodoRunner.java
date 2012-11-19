@@ -1,5 +1,5 @@
+import ch.zhaw.jtodo.control.JtodoControl;
 import ch.zhaw.jtodo.dao.CRUDService;
-
 
 public class JtodoRunner {
 
@@ -8,7 +8,7 @@ public class JtodoRunner {
 	 */
 	public static void main(String[] args) {
 		new CRUDService().testCrudService();
-
+		new JtodoControl();
 	}
 
 }
