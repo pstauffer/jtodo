@@ -1,5 +1,4 @@
-import ch.zhaw.jtodo.control.JtodoControl;
-import ch.zhaw.jtodo.dao.CRUDService;
+import ch.zhaw.jtodo.controller.GUIController;
 
 public class JtodoRunner {
 
@@ -7,8 +6,8 @@ public class JtodoRunner {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CRUDService().testCrudService();
-		new JtodoControl();
+		// new CRUDService().testCrudService();
+		new GUIController();
 	}
 
 }
