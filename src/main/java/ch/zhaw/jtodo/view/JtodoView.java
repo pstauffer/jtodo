@@ -15,12 +15,14 @@ public class JtodoView extends JFrame {
 	private GUIController control;
 	private JButton button;
 	private JTextField text;
+	private JTextField task;
 
 	public JtodoView(GUIController control) {
-		super("MVC Test");
+		super("JTodo");
 		this.control = control;
-		button = new JButton("klick");
+		button = new JButton("Task adden");
 		text = new JTextField(20);
+		task = new JTextField(20);
 
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -30,6 +32,7 @@ public class JtodoView extends JFrame {
 		});
 		setLayout(new FlowLayout());
 		add(button);
+		add(task);
 		add(text);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
@@ -41,6 +44,8 @@ public class JtodoView extends JFrame {
 	}
 
 	public void update(JtodoModel model) {
-		text.setText("Button wurde " + model.getCounter() + " mal gedrueckt");
+		text.setText("" + model.getCounter() + " Task bereits hinzugefuegt");
+		System.out.println(task.getText());
 	}
+
 }
