@@ -14,24 +14,46 @@ import org.hibernate.criterion.Example;
 import ch.zhaw.jtodo.dao.IGenericDAO;
 import ch.zhaw.jtodo.domain.Category;
 
+/**
+ * 
+ * @author yannik
+ *
+ * @param <T>
+ * @param <ID>
+ */
 public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		implements IGenericDAO<T, ID> {
 
 	private Class<T> persistentClass;
 	private SessionFactory factory;
-
+	
+	/**
+	 * 
+	 * @param type
+	 */
 	public GenericHibernateDAO(Class<T> type) {
 		this.persistentClass = type;
 	}
 
+	/**
+	 * 
+	 * @param factory
+	 */
 	public void setFactory(SessionFactory factory) {
 		this.factory = factory;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Class<T> getPersistentClass() {
 		return persistentClass;
 	}
-
+	
+	/**
+	 * Findet ein BusinessObject mithilfe seiner eindeutigen ID
+	 */
 	@SuppressWarnings("unchecked")
 	public T findById(ID id) {
 		T entity;
@@ -55,6 +77,9 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         }
 	}
 
+	/**
+	 * Finds all businessObject of type on the db and returns them in a list
+	 */
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
 		Session session = factory.openSession();
@@ -64,7 +89,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		
 		return returnList;
 	}
-
+	
+	/**
+	 * Schreibt ein BusinessObject persistent auf die Datenbank, dies geschieht
+	 * konkret über Hibernate 
+	 */
 	@SuppressWarnings("unchecked")
 	public T  write(T businessObject) throws Exception{
 		 Session session = factory.openSession();
@@ -83,7 +112,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		     session.close();
 		 }
 	}
-
+	
+	/**
+	 * Löscht ein BusinessObject auf der DB, dafür wird die Hibernate SessionFactory
+	 * verwendet um eine neue Session zu erzeugen
+	 */
 	public void delete(T entity) throws Exception {
 		 Session session = factory.openSession();
 		 Transaction tx = null;
@@ -101,6 +134,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		 }
 	}
 	
+	/**
+	 * 
+	 * @param criterion
+	 * @return
+	 */
 	protected List<T> findByCriteria(Criterion criterion) {
 		Session session = factory.openSession();
 		Criteria crit = session.createCriteria(getPersistentClass());

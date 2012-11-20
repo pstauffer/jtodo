@@ -11,9 +11,19 @@ import ch.zhaw.jtodo.dao.hibernate.TaskHibernateDAO;
 import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Priority;
 
+/**
+ * Konkrete Factory Implementation definiert durch Interface @IDAOFactory
+ * Verteilt die einzelnen instanzen der Data Access Objects
+ * @author yannik
+ */
 public class DAOFactory implements IDAOFactory{
     private SessionFactory factory;
     
+    /**
+     * Konstruktor der DAOFactory, diese muss mit einer hibernate sessionFactory
+     * initalisiert werde
+     * @param sessionFactory hibernate session factory
+     */
     public DAOFactory(SessionFactory sessionFactory){
     	factory = sessionFactory;	
     }
@@ -23,12 +33,13 @@ public class DAOFactory implements IDAOFactory{
 		dao.setFactory(this.factory);
 		return (dao);
 	}
-
+	
 	public IReminderDAO getReminderDAO() {
 		ReminderHibernateDAO dao = new ReminderHibernateDAO();
 		dao.setFactory(this.factory);
 		return (dao);
 	}
+	
 	public IPriorityDAO getPriorityDAO() {
 		PriorityHibernateDAO dao = new PriorityHibernateDAO();
 		dao.setFactory(this.factory);
@@ -39,11 +50,4 @@ public class DAOFactory implements IDAOFactory{
 		dao.setFactory(this.factory);
 		return (dao);
 	}
-    protected Session getCurrentSession() {
-    	Session session = HibernateUtil.getSessionFactory().openSession();
-        return session;
-    }
- 
- 
-
 }
