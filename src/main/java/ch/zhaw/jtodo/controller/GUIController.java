@@ -14,8 +14,9 @@ public class GUIController {
 	}
 
 	public void handleButtonAction() {
-		System.out.println("Taste wuerde gedrueckt");
+		System.out.println("Task wuerde hinzugefuegt");
 		model.countUp();
 		view.update(model);
+		System.out.println(view.getTask());
 	}
 }
