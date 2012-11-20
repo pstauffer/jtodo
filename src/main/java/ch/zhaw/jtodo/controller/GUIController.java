@@ -17,6 +17,5 @@ public class GUIController {
 		System.out.println("Task wuerde hinzugefuegt");
 		model.countUp();
 		view.update(model);
-		System.out.println(view.getTask());
 	}
 }

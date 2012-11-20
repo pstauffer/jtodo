@@ -44,10 +44,8 @@ public class JtodoView extends JFrame {
 	}
 
 	public void update(JtodoModel model) {
-		text.setText("Task wurde " + model.getCounter() + " mal hinzugefuegt");
+		text.setText("" + model.getCounter() + " Task bereits hinzugefuegt");
+		System.out.println(task.getText());
 	}
 
-	public String getTask() {
-		return task.getText();
-	}
 }
