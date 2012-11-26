@@ -12,4 +12,9 @@ public class JtodoModel {
 		return counter;
 	}
 
+	public void getTaskList() {
+		// diese methode wird spaeter die komplette taskliste abfragen, der
+		// return-typ wird dann natuerlich nicht mehr void sein
+	}
+
 }

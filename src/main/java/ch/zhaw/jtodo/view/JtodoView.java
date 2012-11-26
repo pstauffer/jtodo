@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
@@ -16,6 +17,7 @@ public class JtodoView extends JFrame {
 	private JButton button;
 	private JTextField text;
 	private JTextField task;
+	private final JComboBox category;
 
 	public JtodoView(GUIController control) {
 		super("JTodo");
@@ -23,6 +25,12 @@ public class JtodoView extends JFrame {
 		button = new JButton("Task adden");
 		text = new JTextField(20);
 		task = new JTextField(20);
+		category = new JComboBox();
+		// auswahl wird spaeter abgefuellt durch das auslesen der kategorien in
+		// der db
+		category.insertItemAt("low", 0);
+		category.insertItemAt("medium", 1);
+		category.insertItemAt("high", 2);
 
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -31,9 +39,10 @@ public class JtodoView extends JFrame {
 			}
 		});
 		setLayout(new FlowLayout());
-		add(button);
 		add(task);
+		add(category);
 		add(text);
+		add(button);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -45,7 +54,11 @@ public class JtodoView extends JFrame {
 
 	public void update(JtodoModel model) {
 		text.setText("" + model.getCounter() + " Task bereits hinzugefuegt");
-		System.out.println(task.getText());
+		System.out.println(this.getTask());
+	}
+
+	public String getTask() {
+		return task.getText();
 	}
 
 }
