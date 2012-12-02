@@ -7,12 +7,16 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.model.JtodoModel;
 
 public class JtodoView extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private GUIController control;
 	private JButton button;
 	private JTextField text;
@@ -26,11 +30,40 @@ public class JtodoView extends JFrame {
 		text = new JTextField(20);
 		task = new JTextField(20);
 		category = new JComboBox();
+
 		// auswahl wird spaeter abgefuellt durch das auslesen der kategorien in
 		// der db
 		category.insertItemAt("low", 0);
 		category.insertItemAt("medium", 1);
 		category.insertItemAt("high", 2);
+
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu mnNewMenu = new JMenu("File");
+		menuBar.add(mnNewMenu);
+
+		JMenuItem mntmNewTask = new JMenuItem("New Task");
+		mnNewMenu.add(mntmNewTask);
+
+		JMenuItem mntmClose = new JMenuItem("Close");
+		mnNewMenu.add(mntmClose);
+
+		mntmClose.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(EXIT_ON_CLOSE);
+			}
+		});
+
+		JMenu mnAbout = new JMenu("About");
+		menuBar.add(mnAbout);
+
+		JMenuItem mntmHelp = new JMenuItem("Help");
+		mnAbout.add(mntmHelp);
+
+		JMenuItem mntmVersion = new JMenuItem("Version");
+		mnAbout.add(mntmVersion);
 
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -38,6 +71,7 @@ public class JtodoView extends JFrame {
 				buttonAction(e);
 			}
 		});
+
 		setLayout(new FlowLayout());
 		add(task);
 		add(category);
