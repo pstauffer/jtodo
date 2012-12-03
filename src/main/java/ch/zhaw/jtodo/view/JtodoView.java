@@ -88,7 +88,6 @@ public class JtodoView extends JFrame {
 		add(taskTable, BorderLayout.PAGE_END);
 		add(button, BorderLayout.LINE_END);
 
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 	}
