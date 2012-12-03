@@ -1,5 +1,6 @@
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.dao.CRUDService;
+import ch.zhaw.jtodo.view.TestGui;
 
 public class JtodoRunner {
 
@@ -7,9 +8,8 @@ public class JtodoRunner {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CRUDService().testCrudService();
+		//new CRUDService().testCrudService();
 		//new GUIController();
-
 	}
 
 }

@@ -72,11 +72,11 @@ public class JtodoView extends JFrame {
 			}
 		});
 
-		setLayout(new FlowLayout());
-		add(task);
-		add(category);
-		add(text);
-		add(button);
+		getContentPane().setLayout(new FlowLayout());
+		getContentPane().add(task);
+		getContentPane().add(category);
+		getContentPane().add(text);
+		getContentPane().add(button);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
