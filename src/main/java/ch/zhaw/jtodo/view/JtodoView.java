@@ -1,6 +1,6 @@
 package ch.zhaw.jtodo.view;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import ch.zhaw.jtodo.controller.GUIController;
@@ -18,21 +20,19 @@ import ch.zhaw.jtodo.model.JtodoModel;
 public class JtodoView extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private GUIController control;
-	private JButton button;
 	private JTextField text;
 	private JTextField task;
 	private final JComboBox category;
 
 	public JtodoView(GUIController control) {
-		super("JTodo");
+		super("JTodo -  PS & YK");
+
 		this.control = control;
-		button = new JButton("Task adden");
-		text = new JTextField(20);
 		task = new JTextField(20);
-		category = new JComboBox();
 
 		// auswahl wird spaeter abgefuellt durch das auslesen der kategorien in
 		// der db
+		category = new JComboBox();
 		category.insertItemAt("low", 0);
 		category.insertItemAt("medium", 1);
 		category.insertItemAt("high", 2);
@@ -65,6 +65,16 @@ public class JtodoView extends JFrame {
 		JMenuItem mntmVersion = new JMenuItem("Version");
 		mnAbout.add(mntmVersion);
 
+		String[][] taskList = { { "Winterpneu montieren", "high" },
+				{ "Einkaufen", "low" }, { "Ferien buchen", "medium" } };
+
+		String[] columnNames = { "Task", "Priority" };
+		text = new JTextField(20);
+
+		JTable table = new JTable(taskList, columnNames);
+		JScrollPane taskTable = new JScrollPane(table);
+		JButton button = new JButton("Task adden");
+
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -72,11 +82,12 @@ public class JtodoView extends JFrame {
 			}
 		});
 
-		setLayout(new FlowLayout());
-		add(task);
-		add(category);
-		add(text);
-		add(button);
+		add(task, BorderLayout.LINE_START);
+		add(text, BorderLayout.CENTER);
+		add(category, BorderLayout.PAGE_START);
+		add(taskTable, BorderLayout.PAGE_END);
+		add(button, BorderLayout.LINE_END);
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -87,7 +98,11 @@ public class JtodoView extends JFrame {
 	}
 
 	public void update(JtodoModel model) {
-		text.setText("" + model.getCounter() + " Task bereits hinzugefuegt");
+		if (model.getCounter() < 2) {
+			text.setText("" + model.getCounter() + " Task added");
+		} else {
+			text.setText("" + model.getCounter() + " Tasks already added");
+		}
 		System.out.println(this.getTask());
 	}
 
