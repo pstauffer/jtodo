@@ -30,24 +30,24 @@ public class DAOFactory implements IDAOFactory{
     
 	public ICategoryDAO getCategoryDAO() {
 		CategoryHibernateDAO dao = new CategoryHibernateDAO();
-		dao.setFactory(this.factory);
+		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 	
 	public IReminderDAO getReminderDAO() {
 		ReminderHibernateDAO dao = new ReminderHibernateDAO();
-		dao.setFactory(this.factory);
+		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 	
 	public IPriorityDAO getPriorityDAO() {
 		PriorityHibernateDAO dao = new PriorityHibernateDAO();
-		dao.setFactory(this.factory);
+		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 	public ITaskDAO getTaskDAO() {
 		TaskHibernateDAO dao = new TaskHibernateDAO();
-		dao.setFactory(this.factory);
+		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 }

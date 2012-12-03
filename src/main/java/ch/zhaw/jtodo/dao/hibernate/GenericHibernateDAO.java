@@ -26,6 +26,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
 	private Class<T> persistentClass;
 	private SessionFactory factory;
+	private Session session;
 	
 	/**
 	 * 
@@ -34,14 +35,17 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	public GenericHibernateDAO(Class<T> type) {
 		this.persistentClass = type;
 	}
-
-	/**
-	 * 
-	 * @param factory
-	 */
-	public void setFactory(SessionFactory factory) {
-		this.factory = factory;
-	}
+	
+    @SuppressWarnings("unchecked")
+    public void setSession(Session s) {
+        this.session = s;
+    }
+ 
+    protected Session getSession() {
+        if (session == null)
+            throw new IllegalStateException("Session has not been set on DAO before usage");
+        return session;
+    }
 	
 	/**
 	 * 
@@ -57,7 +61,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	@SuppressWarnings("unchecked")
 	public T findById(ID id) {
 		T entity;
-		Session session = factory.openSession();
         try {
             entity = (T) session.get(this.getPersistentClass(), id);
             if (entity==null) {
@@ -72,9 +75,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             //log.error("get failed", re);
             throw re;
         }
-        finally{
-        	session.close();
-        }
 	}
 
 	/**
@@ -82,10 +82,8 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	 */
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
-		Session session = factory.openSession();
 		Criteria criteria = session.createCriteria(this.persistentClass);
 		List<T> returnList = criteria.list();
-		session.close();
 		
 		return returnList;
 	}
@@ -96,20 +94,16 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	 */
 	@SuppressWarnings("unchecked")
 	public T  write(T businessObject) throws Exception{
-		 Session session = factory.openSession();
 		 Transaction tx = null;
 		 try {
 		     tx = session.beginTransaction();
-		     session.saveOrUpdate(businessObject);
+		     session.persist(businessObject);
 		     tx.commit();
 		     return businessObject;
 		 }
 		 catch (Exception e) {
 		     if (tx!=null) tx.rollback();
 		     throw e;
-		 }
-		 finally {
-		     session.close();
 		 }
 	}
 	
@@ -118,7 +112,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	 * verwendet um eine neue Session zu erzeugen
 	 */
 	public void delete(T entity) throws Exception {
-		 Session session = factory.openSession();
 		 Transaction tx = null;
 		 try {
 		     tx = session.beginTransaction();
@@ -129,9 +122,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		     if (tx!=null) tx.rollback();
 		     throw e;
 		 }
-		 finally {
-		     session.close();
-		 }
 	}
 	
 	/**
@@ -140,11 +130,9 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	 * @return
 	 */
 	protected List<T> findByCriteria(Criterion criterion) {
-		Session session = factory.openSession();
 		Criteria crit = session.createCriteria(getPersistentClass());
 		crit.add(criterion);
 		
-		session.close();
 		return crit.list();
 	}
 

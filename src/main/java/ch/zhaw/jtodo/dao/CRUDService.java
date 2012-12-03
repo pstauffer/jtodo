@@ -13,10 +13,7 @@ import ch.zhaw.jtodo.domain.Priority;
 
 public class CRUDService {
 	
-	private SessionFactory factory;
-	
 	public CRUDService(){
-		factory = HibernateUtil.getSessionFactory();
 	}
 	
 	/**
@@ -26,7 +23,7 @@ public class CRUDService {
 		Category cat = new Category();
 		
 		cat.setName("test1");
-		DAOFactory factory2 = new DAOFactory(factory);
+		DAOFactory factory2 = new DAOFactory(HibernateUtil.getSessionFactory());
 		
 		ICategoryDAO catDAO = factory2.getCategoryDAO();
 		 
