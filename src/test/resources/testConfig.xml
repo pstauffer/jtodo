@@ -32,12 +32,14 @@
 
         <!-- Database connection settings -->
         <property name="connection.driver_class">org.h2.Driver</property>
-        <property name="connection.url">jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE</property>
+        
+        <!-- <property name="connection.url">jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE</property> -->
+        <property name="connection.url">jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MODE=MySQL</property>
         <property name="connection.username">sa</property>
         <property name="connection.password"/>
 
         <!-- JDBC connection pool (use the built-in) -->
-        <property name="connection.pool_size">1</property>
+        <property name="connection.pool_size">10</property>
 
         <!-- SQL dialect -->
         <property name="dialect">org.hibernate.dialect.H2Dialect</property>
@@ -49,12 +51,12 @@
         <property name="show_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
-        <property name="hbm2ddl.auto">update</property>
+        <property name="hbm2ddl.auto">create-drop</property>
 
-        <mapping resource="hibernate/domain/category.hbm.xml"/>
-		<mapping resource="hibernate/domain/priority.hbm.xml"/>
-		<mapping resource="hibernate/domain/task.hbm.xml"/>
-		<mapping resource="hibernate/domain/reminder.hbm.xml"/>
+        <mapping resource="hibernate/domain/Category.hbm.xml"/>
+		<mapping resource="hibernate/domain/Priority.hbm.xml"/>
+		<mapping resource="hibernate/domain/Task.hbm.xml"/>
+		<mapping resource="hibernate/domain/Reminder.hbm.xml"/>
 
     </session-factory>
 

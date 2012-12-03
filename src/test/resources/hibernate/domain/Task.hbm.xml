@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Nov 13, 2012 5:11:21 PM by Hibernate Tools 3.1.0.beta4 -->
 <hibernate-mapping package="ch.zhaw.jtodo.domain">
-    <class name="Task" table="task" catalog="jtodo">
+    <class name="Task" table="task">
         <id name="id" type="int">
             <column name="id" />
             <generator class="assigned" />

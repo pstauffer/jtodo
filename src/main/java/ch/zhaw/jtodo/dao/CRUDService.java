@@ -38,6 +38,8 @@ public class CRUDService {
 		
 		List<Category> catList = catDAO.findAll();
 		
+		HibernateUtil.closeSession();
+		
 	}
 	
 
