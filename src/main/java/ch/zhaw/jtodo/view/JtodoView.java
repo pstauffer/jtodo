@@ -1,6 +1,7 @@
 package ch.zhaw.jtodo.view;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
@@ -9,9 +10,11 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -32,7 +35,8 @@ public class JtodoView extends JFrame {
 	private final JComboBox category;
 
 	public JtodoView(GUIController control) {
-		super("JTodo -  PS & YK");
+		JFrame frame = new JFrame("JTodo -  PS & YK");
+		frame.setLayout(new BorderLayout());
 
 		this.control = control;
 		newTask = new JTextField(20);
@@ -98,14 +102,34 @@ public class JtodoView extends JFrame {
 			}
 		});
 
-		getContentPane().add(category, BorderLayout.PAGE_START);
-		getContentPane().add(newTask, BorderLayout.LINE_START);
-		getContentPane().add(text, BorderLayout.CENTER);
-		getContentPane().add(button, BorderLayout.LINE_END);
-		getContentPane().add(taskList, BorderLayout.PAGE_END);
+		Container c = frame.getContentPane();
 
-		pack();
-		setVisible(true);
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BorderLayout());
+		rightPanel.add(newTask, BorderLayout.PAGE_START);
+		// rightPanel.add(text);
+		rightPanel.add(button, BorderLayout.CENTER);
+
+		JPanel leftPanel = new JPanel();
+		leftPanel.add(category);
+
+		JPanel buttomPanel = new JPanel();
+		buttomPanel.add(taskList);
+
+		JPanel topPanel = new JPanel();
+		topPanel.add(new JLabel("Test"));
+
+		JPanel centerPanel = new JPanel();
+		centerPanel.add(taskList);
+
+		c.add(topPanel, BorderLayout.PAGE_START);
+		c.add(leftPanel, BorderLayout.LINE_START);
+		c.add(centerPanel, BorderLayout.CENTER);
+		c.add(rightPanel, BorderLayout.LINE_END);
+		c.add(buttomPanel, BorderLayout.PAGE_END);
+
+		frame.setSize(700, 300);
+		frame.setVisible(true);
 	}
 
 	private void buttonAction(ActionEvent e) {
