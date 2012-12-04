@@ -1,9 +1,10 @@
 package ch.zhaw.jtodo.view;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -21,6 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.dao.DAOFactory;
@@ -36,23 +40,31 @@ public class JtodoView extends JFrame {
 	private JTextField newTask;
 	private final JComboBox category;
 	private JTable taskList;
+	private JList list;
 
 	public JtodoView(GUIController control) {
 		JFrame frame = new JFrame("JTodo -  PS & YK");
+
 		frame.getContentPane().setLayout(new BorderLayout());
+
+		DataHandler handler = new DataHandler(new DAOFactory());
 
 		this.control = control;
 		category = new JComboBox();
 
-		DataHandler handler = new DataHandler(new DAOFactory());
+		ArrayList<String> blubb = new ArrayList<String>();
+		blubb.add("haha");
+		blubb.add("blubb");
 
 		List<Category> cat = handler.getAllCategorys();
 		for (int i = 0; i < cat.size(); i++) {
 			category.insertItemAt(cat.get(i).getName(), i);
+			blubb.add(cat.get(i).getName());
 		}
+		list = new JList(blubb.toArray());
 
 		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		frame.setJMenuBar(menuBar);
 
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
@@ -91,16 +103,15 @@ public class JtodoView extends JFrame {
 					tasks.get(i).getName(), tasks.get(i).getDescription() });
 		}
 
-		Container c = frame.getContentPane();
-
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		JLabel label = new JLabel("Test");
-		tabbedPane.addTab("New tab", null, label, null);
 
 		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_1, null);
+		tabbedPane.addTab("Main", null, panel_1, null);
 		panel_1.setLayout(new BorderLayout(0, 0));
+
+		JLabel label = new JLabel("Test Tab - Description...");
+		tabbedPane.addTab("Test Tab", null, label, null);
 
 		JPanel topPanel = new JPanel();
 		panel_1.add(topPanel, BorderLayout.NORTH);
@@ -113,7 +124,7 @@ public class JtodoView extends JFrame {
 		panel.setLayout(new BorderLayout(0, 0));
 		newTask = new JTextField(20);
 		newTask.setBounds(262, 4, 254, 28);
-		taskList.setBounds(17, 44, 615, 177);
+		taskList.setBounds(17, 44, 615, 156);
 		taskList.setBorder(new TitledBorder(null, "", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 
@@ -132,18 +143,21 @@ public class JtodoView extends JFrame {
 		panel_1.add(mainPanel, BorderLayout.CENTER);
 		mainPanel.setLayout(null);
 		mainPanel.add(newTask);
-		mainPanel.add(text);
+		buttomPanel.add(text);
 		mainPanel.add(button);
 		mainPanel.add(taskList);
 		category.setBounds(17, 6, 172, 27);
 		mainPanel.add(category);
 
 		JPanel leftPanel = new JPanel();
+		leftPanel.add(list);
+
 		panel_1.add(leftPanel, BorderLayout.WEST);
 		leftPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 
-		JLabel lblBlubb = new JLabel("blubb");
-		leftPanel.add(lblBlubb);
+		panel_1.setFocusTraversalPolicy(new FocusTraversalOnArray(
+				new Component[] { topPanel, buttomPanel, panel, mainPanel,
+						newTask, text, button, taskList, category, leftPanel }));
 
 		frame.setSize(755, 344);
 		frame.setVisible(true);
@@ -161,13 +175,8 @@ public class JtodoView extends JFrame {
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 		handler.createTask(task);
+		text.setText("added the Task: " + this.getTask());
 
-		if (model.getCounter() < 2) {
-			text.setText("" + model.getCounter() + " Task added");
-		} else {
-			text.setText("" + model.getCounter() + " Tasks already added");
-		}
-		System.out.println(this.getTask());
 	}
 
 	public String getTask() {
