@@ -3,6 +3,7 @@ package ch.zhaw.jtodo.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -70,7 +71,7 @@ public class JtodoView extends JFrame {
 		JMenuItem mntmVersion = new JMenuItem("Version");
 		mnAbout.add(mntmVersion);
 
-		DataHandler handler = new DataHandler(new DAOFactory(null));
+		DataHandler handler = new DataHandler(new DAOFactory());
 		List<Task> tasks = handler.getAllTasks();
 
 		String task[][] = {};
@@ -110,6 +111,14 @@ public class JtodoView extends JFrame {
 	}
 
 	public void update(JtodoModel model) {
+		Date now = new Date();
+		Date mod = new Date();
+		Task task = new Task(newTask.getText(), "description", 1, 1, now, 1,
+				mod);
+
+		DataHandler handler = new DataHandler(new DAOFactory());
+		handler.createTask(task);
+
 		if (model.getCounter() < 2) {
 			text.setText("" + model.getCounter() + " Task added");
 		} else {
