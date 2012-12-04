@@ -15,8 +15,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,19 +35,18 @@ public class JtodoView extends JFrame {
 	private JTextField text;
 	private JTextField newTask;
 	private final JComboBox category;
+	private JTable taskList;
 
 	public JtodoView(GUIController control) {
 		JFrame frame = new JFrame("JTodo -  PS & YK");
-		frame.setLayout(new BorderLayout());
+		frame.getContentPane().setLayout(new BorderLayout());
 
 		this.control = control;
-		newTask = new JTextField(20);
+		category = new JComboBox();
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 
 		List<Category> cat = handler.getAllCategorys();
-
-		category = new JComboBox();
 		for (int i = 0; i < cat.size(); i++) {
 			category.insertItemAt(cat.get(i).getName(), i);
 		}
@@ -83,17 +84,42 @@ public class JtodoView extends JFrame {
 		String task[][] = {};
 		String desc[] = { "Task", "Description" };
 		DefaultTableModel model = new DefaultTableModel(task, desc);
-		JTable taskList = new JTable(model);
-		taskList.setBorder(new TitledBorder(null, "", TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
+		taskList = new JTable(model);
 
 		for (int i = 0; i < tasks.size(); i++) {
 			model.insertRow(taskList.getRowCount(), new Object[] {
 					tasks.get(i).getName(), tasks.get(i).getDescription() });
 		}
 
+		Container c = frame.getContentPane();
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		JLabel label = new JLabel("Test");
+		tabbedPane.addTab("New tab", null, label, null);
+
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("New tab", null, panel_1, null);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
+		JPanel topPanel = new JPanel();
+		panel_1.add(topPanel, BorderLayout.NORTH);
+
+		JPanel buttomPanel = new JPanel();
+		panel_1.add(buttomPanel, BorderLayout.SOUTH);
+
+		JPanel panel = new JPanel();
+		buttomPanel.add(panel);
+		panel.setLayout(new BorderLayout(0, 0));
+		newTask = new JTextField(20);
+		newTask.setBounds(262, 4, 254, 28);
+		taskList.setBounds(17, 44, 615, 177);
+		taskList.setBorder(new TitledBorder(null, "", TitledBorder.LEADING,
+				TitledBorder.TOP, null, null));
+
 		text = new JTextField(20);
 		JButton button = new JButton("Task adden");
+		button.setBounds(516, 5, 116, 29);
 
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -102,33 +128,24 @@ public class JtodoView extends JFrame {
 			}
 		});
 
-		Container c = frame.getContentPane();
-
-		JPanel rightPanel = new JPanel();
-		rightPanel.setLayout(new BorderLayout());
-		rightPanel.add(newTask, BorderLayout.PAGE_START);
-		// rightPanel.add(text);
-		rightPanel.add(button, BorderLayout.CENTER);
+		JPanel mainPanel = new JPanel();
+		panel_1.add(mainPanel, BorderLayout.CENTER);
+		mainPanel.setLayout(null);
+		mainPanel.add(newTask);
+		mainPanel.add(text);
+		mainPanel.add(button);
+		mainPanel.add(taskList);
+		category.setBounds(17, 6, 172, 27);
+		mainPanel.add(category);
 
 		JPanel leftPanel = new JPanel();
-		leftPanel.add(category);
+		panel_1.add(leftPanel, BorderLayout.WEST);
+		leftPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 
-		JPanel buttomPanel = new JPanel();
-		buttomPanel.add(taskList);
+		JLabel lblBlubb = new JLabel("blubb");
+		leftPanel.add(lblBlubb);
 
-		JPanel topPanel = new JPanel();
-		topPanel.add(new JLabel("Test"));
-
-		JPanel centerPanel = new JPanel();
-		centerPanel.add(taskList);
-
-		c.add(topPanel, BorderLayout.PAGE_START);
-		c.add(leftPanel, BorderLayout.LINE_START);
-		c.add(centerPanel, BorderLayout.CENTER);
-		c.add(rightPanel, BorderLayout.LINE_END);
-		c.add(buttomPanel, BorderLayout.PAGE_END);
-
-		frame.setSize(700, 300);
+		frame.setSize(755, 344);
 		frame.setVisible(true);
 	}
 
