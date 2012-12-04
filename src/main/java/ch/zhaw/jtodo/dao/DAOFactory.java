@@ -18,33 +18,37 @@ import ch.zhaw.jtodo.domain.Priority;
  */
 public class DAOFactory implements IDAOFactory{
     private SessionFactory factory;
-    
+  
     /**
-     * Konstruktor der DAOFactory, diese muss mit einer hibernate sessionFactory
-     * initalisiert werde
-     * @param sessionFactory hibernate session factory
+     * Returns ICategoryDAO
      */
-    public DAOFactory(SessionFactory sessionFactory){
-    	factory = sessionFactory;	
-    }
-    
 	public ICategoryDAO getCategoryDAO() {
 		CategoryHibernateDAO dao = new CategoryHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 	
+	/**
+	 * Returns IReminderDAO
+	 */
 	public IReminderDAO getReminderDAO() {
 		ReminderHibernateDAO dao = new ReminderHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 	
+	/**
+	 * Returns IPriorityDAO
+	 */
 	public IPriorityDAO getPriorityDAO() {
 		PriorityHibernateDAO dao = new PriorityHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
+	
+	/**
+	 * Returns ITaskDAO
+	 */
 	public ITaskDAO getTaskDAO() {
 		TaskHibernateDAO dao = new TaskHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());

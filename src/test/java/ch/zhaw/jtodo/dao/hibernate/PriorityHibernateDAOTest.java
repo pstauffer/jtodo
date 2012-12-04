@@ -27,9 +27,10 @@ public class PriorityHibernateDAOTest {
 	}
 
 	@Test
-	public void test() {
+	public void readWritePriorityToDBTest() {
 		Priority prio = new Priority();
 		prio.setName("fubar");
+		prio.setId(200);
 		
 		try {
 			prioDAO.write(prio);
@@ -37,6 +38,10 @@ public class PriorityHibernateDAOTest {
 			e.printStackTrace();
 			fail("db write failed");
 		}
+		
+		Priority resultPrio = prioDAO.findById(200);
+		
+		assertEquals(resultPrio.getName(),prio.getName());
 	}
 
 }
