@@ -20,9 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
@@ -39,94 +38,89 @@ public class JtodoView extends JFrame {
 	private JTextField text;
 	private JTextField newTask;
 	private final JComboBox category;
-	private JTable taskList;
-	private JList list;
+	private JTable taskTable;
+	private JList categoryList;
 
 	public JtodoView(GUIController control) {
 		JFrame frame = new JFrame("JTodo -  PS & YK");
-
 		frame.getContentPane().setLayout(new BorderLayout());
+		this.control = control;
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 
-		this.control = control;
 		category = new JComboBox();
-
-		ArrayList<String> blubb = new ArrayList<String>();
-		blubb.add("haha");
-		blubb.add("blubb");
-
+		ArrayList<String> catList = new ArrayList<String>();
 		List<Category> cat = handler.getAllCategorys();
 		for (int i = 0; i < cat.size(); i++) {
 			category.insertItemAt(cat.get(i).getName(), i);
-			blubb.add(cat.get(i).getName());
+			catList.add(cat.get(i).getName());
 		}
-		list = new JList(blubb.toArray());
+		categoryList = new JList(catList.toArray());
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("File");
-		menuBar.add(mnNewMenu);
-
-		JMenuItem mntmNewTask = new JMenuItem("New Task");
-		mnNewMenu.add(mntmNewTask);
-
-		JMenuItem mntmClose = new JMenuItem("Close");
-		mnNewMenu.add(mntmClose);
-
-		mntmClose.addActionListener(new ActionListener() {
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		JMenuItem newTaskMenuItem = new JMenuItem("New Task");
+		fileMenu.add(newTaskMenuItem);
+		JMenuItem closeMenuItem = new JMenuItem("Close");
+		fileMenu.add(closeMenuItem);
+		closeMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(EXIT_ON_CLOSE);
 			}
 		});
 
-		JMenu mnAbout = new JMenu("About");
-		menuBar.add(mnAbout);
-
-		JMenuItem mntmHelp = new JMenuItem("Help");
-		mnAbout.add(mntmHelp);
-
-		JMenuItem mntmVersion = new JMenuItem("Version");
-		mnAbout.add(mntmVersion);
+		JMenu aboutMenu = new JMenu("About");
+		menuBar.add(aboutMenu);
+		JMenuItem helpMenuItem = new JMenuItem("Help");
+		aboutMenu.add(helpMenuItem);
+		JMenuItem versionMenuItem = new JMenuItem("Version");
+		aboutMenu.add(versionMenuItem);
 
 		List<Task> tasks = handler.getAllTasks();
-
-		String task[][] = {};
-		String desc[] = { "Task", "Description" };
-		DefaultTableModel model = new DefaultTableModel(task, desc);
-		taskList = new JTable(model);
-
+		DefaultTableModel model = new DefaultTableModel();
+		taskTable = new JTable(model);
+		// taskTable.setEnabled(false);
+		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		model.addColumn("Task");
+		model.addColumn("Description");
+		TableColumn col = taskTable.getColumnModel().getColumn(0);
+		col.setPreferredWidth(40);
+		col = taskTable.getColumnModel().getColumn(1);
+		col.setPreferredWidth(120);
 		for (int i = 0; i < tasks.size(); i++) {
-			model.insertRow(taskList.getRowCount(), new Object[] {
-					tasks.get(i).getName(), tasks.get(i).getDescription() });
+			{
+				String taskName = tasks.get(i).getName();
+				String taskDesc = tasks.get(i).getDescription();
+				model.addRow(new Object[] { taskName, taskDesc });
+			}
 		}
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(tabs, BorderLayout.CENTER);
 
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Main", null, panel_1, null);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel mainTabPanel = new JPanel();
+		tabs.addTab("Main", null, mainTabPanel, null);
+		mainTabPanel.setLayout(new BorderLayout(0, 0));
 
 		JLabel label = new JLabel("Test Tab - Description...");
-		tabbedPane.addTab("Test Tab", null, label, null);
+		tabs.addTab("Test Tab", null, label, null);
 
 		JPanel topPanel = new JPanel();
-		panel_1.add(topPanel, BorderLayout.NORTH);
+		mainTabPanel.add(topPanel, BorderLayout.NORTH);
 
 		JPanel buttomPanel = new JPanel();
-		panel_1.add(buttomPanel, BorderLayout.SOUTH);
+		mainTabPanel.add(buttomPanel, BorderLayout.SOUTH);
 
 		JPanel panel = new JPanel();
 		buttomPanel.add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 		newTask = new JTextField(20);
 		newTask.setBounds(262, 4, 254, 28);
-		taskList.setBounds(17, 44, 615, 156);
-		taskList.setBorder(new TitledBorder(null, "", TitledBorder.LEADING,
-				TitledBorder.TOP, null, null));
+		taskTable.setBounds(17, 44, 615, 156);
 
 		text = new JTextField(20);
 		JButton button = new JButton("Task adden");
@@ -139,25 +133,26 @@ public class JtodoView extends JFrame {
 			}
 		});
 
-		JPanel mainPanel = new JPanel();
-		panel_1.add(mainPanel, BorderLayout.CENTER);
-		mainPanel.setLayout(null);
-		mainPanel.add(newTask);
+		JPanel centerPanel = new JPanel();
+		mainTabPanel.add(centerPanel, BorderLayout.CENTER);
+		centerPanel.setLayout(null);
+		centerPanel.add(newTask);
 		buttomPanel.add(text);
-		mainPanel.add(button);
-		mainPanel.add(taskList);
+		centerPanel.add(button);
+		centerPanel.add(taskTable);
 		category.setBounds(17, 6, 172, 27);
-		mainPanel.add(category);
+		centerPanel.add(category);
 
 		JPanel leftPanel = new JPanel();
-		leftPanel.add(list);
+		leftPanel.add(categoryList);
 
-		panel_1.add(leftPanel, BorderLayout.WEST);
-		leftPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		mainTabPanel.add(leftPanel, BorderLayout.WEST);
 
-		panel_1.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { topPanel, buttomPanel, panel, mainPanel,
-						newTask, text, button, taskList, category, leftPanel }));
+		mainTabPanel
+				.setFocusTraversalPolicy(new FocusTraversalOnArray(
+						new Component[] { topPanel, buttomPanel, panel,
+								centerPanel, newTask, text, button, taskTable,
+								category, leftPanel }));
 
 		frame.setSize(755, 344);
 		frame.setVisible(true);
