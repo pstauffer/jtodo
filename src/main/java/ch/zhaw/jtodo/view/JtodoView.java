@@ -70,7 +70,7 @@ public class JtodoView extends JFrame {
 		JMenuItem mntmVersion = new JMenuItem("Version");
 		mnAbout.add(mntmVersion);
 
-		DataHandler handler = new DataHandler(new DAOFactory(null));
+		DataHandler handler = new DataHandler(new DAOFactory());
 		List<Task> tasks = handler.getAllTasks();
 
 		String task[][] = {};

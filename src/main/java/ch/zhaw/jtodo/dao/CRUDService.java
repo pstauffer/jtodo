@@ -23,7 +23,7 @@ public class CRUDService {
 		Category cat = new Category();
 		
 		cat.setName("test1");
-		DAOFactory factory2 = new DAOFactory(HibernateUtil.getSessionFactory());
+		DAOFactory factory2 = new DAOFactory();
 		
 		ICategoryDAO catDAO = factory2.getCategoryDAO();
 		 

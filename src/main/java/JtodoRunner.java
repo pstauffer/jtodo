@@ -1,4 +1,4 @@
-package JtodoRunner;
+
 
 import ch.zhaw.jtodo.controller.GUIController;
 
