@@ -18,7 +18,11 @@ public class CRUDService {
 
 		cat.setName("test1");
 		DAOFactory factory2 = new DAOFactory();
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> fc720868e05474555fc32f867424ad77bd5c6380
 		ICategoryDAO catDAO = factory2.getCategoryDAO();
 
 		try {
