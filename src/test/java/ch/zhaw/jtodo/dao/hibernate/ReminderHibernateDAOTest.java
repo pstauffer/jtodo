@@ -12,79 +12,79 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Priority;
-import ch.zhaw.jtodo.domain.Task;
+import ch.zhaw.jtodo.domain.Reminder;
 
-public class PriorityHibernateDAOTest {
+public class ReminderHibernateDAOTest {
+
+	private static ReminderHibernateDAO reminderDAO;
 	
-	private static PriorityHibernateDAO prioDAO;
-
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		Session session = Preparation.getSessionFactory().openSession();
-		prioDAO = new PriorityHibernateDAO();
-		prioDAO.setSession(session);
+		reminderDAO = new ReminderHibernateDAO();
+		reminderDAO.setSession(session);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		prioDAO.getSession().close();
+		reminderDAO.getSession().close();
 		Preparation.closeSessionFactory();
 	}
-
+	
 	@Test
 	public void readWritePriorityToDBTest() {
-		Priority prio = new Priority();
-		prio.setName("fubar");
-		prio.setId(200);
+		Reminder reminder = new Reminder();
+		reminder.setTaskid(1);
+		reminder.setDate(new Date());
+		reminder.setId(200);
 		
 		try {
-			prioDAO.write(prio);
+			reminderDAO.write(reminder);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("db write failed");
 		}
 		
-		Priority resultPrio = prioDAO.findById(200);
+		Reminder resultReminder = reminderDAO.findById(200);
 		
-		assertEquals(resultPrio.getName(),prio.getName());
+		assertEquals(resultReminder.getDate(),resultReminder.getDate());
 	}
 	
 	@Test
 	public void deleteTaskTest(){
 		
-		Priority prio = new Priority();
+		Reminder reminder = new Reminder();
 		
-		prio.setName("high");
-		prio.setId(201);
+		reminder.setDate(new Date());
+		reminder.setId(201);
 		
 		try {
-			prioDAO.write(prio);
+			reminderDAO.write(reminder);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Write to db failed");
 		}
 		
 		try {
-			prioDAO.delete(prio);
+			reminderDAO.delete(reminder);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Delete from db failed");
 		}
-		Priority resultPrio = prioDAO.findById(201);
-		assertTrue(resultPrio == null);
+		Reminder resultReminder = reminderDAO.findById(201);
+		assertTrue(resultReminder == null);
 	}
 	
 	@Test
 	public void findAllTest(){
 		
 		for(int i = 0;i<5;i++){
-			Priority prio = new Priority();
-			prio.setName("Prio"+i);
-			prio.setId(i);
+			Reminder reminder = new Reminder();
+			reminder.setDate(new Date());
+			reminder.setId(i);
 			try {
-				prioDAO.write(prio);
+				reminderDAO.write(reminder);
 				//Dirty hack, because the db needs a bit of time
 				Thread.sleep(500);
 			} catch (Exception e) {
@@ -93,27 +93,29 @@ public class PriorityHibernateDAOTest {
 			}
 		}
 		
-		List<Priority> prioList = prioDAO.findAll();
+		List<Reminder> reminderList = reminderDAO.findAll();
 		
-		assertTrue(prioList.size()>=5);
+		assertTrue(reminderList.size()>=5);
 	}
 	
 	@Test
 	public void findByCriterion(){
-		Priority prio = new Priority();
-		prio.setName("fubar");
-		prio.setId(220);
+		Reminder reminder = new Reminder();
+		reminder.setDate(new Date());
+		reminder.setId(220);
 		try {
-			prioDAO.write(prio);
+			reminderDAO.write(reminder);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Write to db failed");
 		}
 		
-		Criteria cr = prioDAO.getSession().createCriteria(Priority.class);
-		cr.add(Restrictions.like("name", "Prio%"));
-		List<Priority> results = cr.list();
-		
-		assertTrue(results.size()==5);
+		Criteria cr = reminderDAO.getSession().createCriteria(Reminder.class);
+		//cr.add(Restrictions.like("Date", "%"));
+		//List<Priority> results = cr.list();
+		//TODO: Find a way to add dates to criteria
+		//assertTrue(results.size()==5);
 	}
+	
+
 }
