@@ -1,7 +1,6 @@
 package ch.zhaw.jtodo.view;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,8 +21,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-
-import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.dao.DAOFactory;
@@ -147,12 +144,6 @@ public class JtodoView extends JFrame {
 		leftPanel.add(categoryList);
 
 		mainTabPanel.add(leftPanel, BorderLayout.WEST);
-
-		mainTabPanel
-				.setFocusTraversalPolicy(new FocusTraversalOnArray(
-						new Component[] { topPanel, buttomPanel, panel,
-								centerPanel, newTask, text, button, taskTable,
-								category, leftPanel }));
 
 		frame.setSize(755, 344);
 		frame.setVisible(true);
