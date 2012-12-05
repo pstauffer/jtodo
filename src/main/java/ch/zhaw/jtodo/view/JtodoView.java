@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -25,7 +24,6 @@ import javax.swing.table.TableColumn;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.dao.DAOFactory;
-import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
 import ch.zhaw.jtodo.model.DataHandler;
 import ch.zhaw.jtodo.model.JtodoModel;
@@ -44,20 +42,23 @@ public class JtodoView extends JFrame {
 		frame.getContentPane().setLayout(new BorderLayout());
 		this.control = control;
 
-		DataHandler handler = new DataHandler(new DAOFactory());
-
 		DefaultComboBoxModel categoryBoxModel = new DefaultComboBoxModel();
 		categoryBox = new JComboBox(categoryBoxModel);
 
 		DefaultListModel categoryListModel = new DefaultListModel();
 		categoryList = new JList(categoryListModel);
+		categoryList.setFixedCellWidth(40);
+		categoryList.setFixedCellHeight(40);
+		categoryListModel.setSize(40);
 
-		List<Category> cat = handler.getAllCategorys();
-		for (int i = 0; i < cat.size(); i++) {
-			String categoryName = cat.get(i).getName();
-			categoryBoxModel.addElement(categoryName);
-			categoryListModel.addElement(categoryName);
-		}
+		// DataHandler handler = new DataHandler(new DAOFactory());
+
+		// List<Category> cat = handler.getAllCategorys();
+		// for (int i = 0; i < cat.size(); i++) {
+		// String categoryName = cat.get(i).getName();
+		// categoryBoxModel.addElement(categoryName);
+		// categoryListModel.addElement(categoryName);
+		// }
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -92,14 +93,14 @@ public class JtodoView extends JFrame {
 		col = taskTable.getColumnModel().getColumn(1);
 		col.setPreferredWidth(120);
 
-		List<Task> tasks = handler.getAllTasks();
-		for (int i = 0; i < tasks.size(); i++) {
-			{
-				String taskName = tasks.get(i).getName();
-				String taskDesc = tasks.get(i).getDescription();
-				taskModel.addRow(new Object[] { taskName, taskDesc });
-			}
-		}
+		// List<Task> tasks = handler.getAllTasks();
+		// for (int i = 0; i < tasks.size(); i++) {
+		// {
+		// String taskName = tasks.get(i).getName();
+		// String taskDesc = tasks.get(i).getDescription();
+		// taskModel.addRow(new Object[] { taskName, taskDesc });
+		// }
+		// }
 
 		JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(tabs, BorderLayout.CENTER);
@@ -166,11 +167,11 @@ public class JtodoView extends JFrame {
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 		handler.createTask(task);
-		text.setText("added the Task: " + this.getTask());
+		text.setText("added the Task: " + this.getNewTask());
 
 	}
 
-	public String getTask() {
+	public String getNewTask() {
 		return newTask.getText();
 	}
 
