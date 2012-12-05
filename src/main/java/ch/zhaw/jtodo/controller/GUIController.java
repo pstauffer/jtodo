@@ -15,7 +15,7 @@ public class GUIController {
 
 	public void handleButtonAction() {
 		// spaeter wird hier zusätzlich der insert in die db hinzugefuegt
-		System.out.println("Task wuerde hinzugefuegt");
+		// System.out.println("Task wuerde hinzugefuegt");
 		model.countUp();
 		// diese methode wird spaeter benoetigt, um die taskliste an die view
 		// weiterzugeben.
