@@ -3,10 +3,11 @@ package ch.zhaw.jtodo.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -34,7 +35,7 @@ public class JtodoView extends JFrame {
 	private GUIController control;
 	private JTextField text;
 	private JTextField newTask;
-	private final JComboBox category;
+	private final JComboBox categoryBox;
 	private JTable taskTable;
 	private JList categoryList;
 
@@ -45,14 +46,18 @@ public class JtodoView extends JFrame {
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 
-		category = new JComboBox();
-		ArrayList<String> catList = new ArrayList<String>();
+		DefaultComboBoxModel categoryBoxModel = new DefaultComboBoxModel();
+		categoryBox = new JComboBox(categoryBoxModel);
+
+		DefaultListModel categoryListModel = new DefaultListModel();
+		categoryList = new JList(categoryListModel);
+
 		List<Category> cat = handler.getAllCategorys();
 		for (int i = 0; i < cat.size(); i++) {
-			category.insertItemAt(cat.get(i).getName(), i);
-			catList.add(cat.get(i).getName());
+			String categoryName = cat.get(i).getName();
+			categoryBoxModel.addElement(categoryName);
+			categoryListModel.addElement(categoryName);
 		}
-		categoryList = new JList(catList.toArray());
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -77,22 +82,22 @@ public class JtodoView extends JFrame {
 		JMenuItem versionMenuItem = new JMenuItem("Version");
 		aboutMenu.add(versionMenuItem);
 
-		List<Task> tasks = handler.getAllTasks();
-		DefaultTableModel model = new DefaultTableModel();
-		taskTable = new JTable(model);
-		// taskTable.setEnabled(false);
+		DefaultTableModel taskModel = new DefaultTableModel();
+		taskTable = new JTable(taskModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		model.addColumn("Task");
-		model.addColumn("Description");
+		taskModel.addColumn("Task");
+		taskModel.addColumn("Description");
 		TableColumn col = taskTable.getColumnModel().getColumn(0);
 		col.setPreferredWidth(40);
 		col = taskTable.getColumnModel().getColumn(1);
 		col.setPreferredWidth(120);
+
+		List<Task> tasks = handler.getAllTasks();
 		for (int i = 0; i < tasks.size(); i++) {
 			{
 				String taskName = tasks.get(i).getName();
 				String taskDesc = tasks.get(i).getDescription();
-				model.addRow(new Object[] { taskName, taskDesc });
+				taskModel.addRow(new Object[] { taskName, taskDesc });
 			}
 		}
 
@@ -137,8 +142,8 @@ public class JtodoView extends JFrame {
 		buttomPanel.add(text);
 		centerPanel.add(button);
 		centerPanel.add(taskTable);
-		category.setBounds(17, 6, 172, 27);
-		centerPanel.add(category);
+		categoryBox.setBounds(17, 6, 172, 27);
+		centerPanel.add(categoryBox);
 
 		JPanel leftPanel = new JPanel();
 		leftPanel.add(categoryList);
