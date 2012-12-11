@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -25,7 +24,6 @@ import javax.swing.table.TableColumn;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.dao.DAOFactory;
-import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
 import ch.zhaw.jtodo.model.DataHandler;
 import ch.zhaw.jtodo.model.JtodoModel;
@@ -86,7 +84,7 @@ public class JtodoView extends JFrame {
 		col = taskTable.getColumnModel().getColumn(1);
 		col.setPreferredWidth(120);
 
-		// initDB(taskModel, categoryListModel, categoryBoxModel);
+		control.initDB(taskModel, categoryListModel, categoryBoxModel);
 
 		newTask = new JTextField(20);
 
@@ -164,27 +162,27 @@ public class JtodoView extends JFrame {
 		return newTask.getText();
 	}
 
-	public void initDB(DefaultTableModel taskModel,
-			DefaultListModel categoryListModel,
-			DefaultComboBoxModel categoryBoxModel) {
-
-		DataHandler handler = new DataHandler(new DAOFactory());
-
-		List<Task> tasks = handler.getAllTasks();
-		for (int i = 0; i < tasks.size(); i++) {
-			{
-				String taskName = tasks.get(i).getName();
-				String taskDesc = tasks.get(i).getDescription();
-				taskModel.addRow(new Object[] { taskName, taskDesc });
-			}
-		}
-
-		List<Category> cat = handler.getAllCategorys();
-		for (int j = 0; j < cat.size(); j++) {
-			String categoryName = cat.get(j).getName();
-			categoryBoxModel.addElement(categoryName);
-			categoryListModel.addElement(categoryName);
-		}
-	}
+	// public void initDB(DefaultTableModel taskModel,
+	// DefaultListModel categoryListModel,
+	// DefaultComboBoxModel categoryBoxModel) {
+	//
+	// DataHandler handler = new DataHandler(new DAOFactory());
+	//
+	// List<Task> tasks = handler.getAllTasks();
+	// for (int i = 0; i < tasks.size(); i++) {
+	// {
+	// String taskName = tasks.get(i).getName();
+	// String taskDesc = tasks.get(i).getDescription();
+	// taskModel.addRow(new Object[] { taskName, taskDesc });
+	// }
+	// }
+	//
+	// List<Category> cat = handler.getAllCategorys();
+	// for (int j = 0; j < cat.size(); j++) {
+	// String categoryName = cat.get(j).getName();
+	// categoryBoxModel.addElement(categoryName);
+	// categoryListModel.addElement(categoryName);
+	// }
+	// }
 
 }
