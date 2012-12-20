@@ -10,7 +10,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -109,20 +108,21 @@ public class JtodoView extends JFrame {
 		JPanel mainTabPanel = new JPanel();
 		mainTabPanel.setLayout(new BorderLayout(0, 0));
 
-		JLabel testLabel = new JLabel("Test Tab - Description...");
+		JPanel testTabPanel = new JPanel();
+		testTabPanel.setLayout(new BorderLayout(0, 0));
 
 		tabs.addTab("Main", null, mainTabPanel, null);
-		tabs.addTab("Test Tab", null, testLabel, null);
+		tabs.addTab("Test Tab", null, testTabPanel, null);
 
 		JPanel topPanel = new JPanel();
 		JPanel leftPanel = new JPanel();
 		JPanel centerPanel = new JPanel();
 		JPanel buttomPanel = new JPanel();
+		// JPanel testCenterPanel = new JPanel();
 
-		// JPanel panel = new JPanel();
-		// panel.setLayout(new BorderLayout(0, 0));
-		// buttomPanel.add(panel);
-		centerPanel.setLayout(null);
+		// testCenterPanel.setLayout(null);
+		// JTable blubb = new JTable();
+		// testCenterPanel.add(blubb);
 
 		mainTabPanel.add(topPanel, BorderLayout.NORTH);
 		mainTabPanel.add(leftPanel, BorderLayout.WEST);
@@ -131,6 +131,7 @@ public class JtodoView extends JFrame {
 
 		leftPanel.add(categoryList);
 
+		centerPanel.setLayout(null);
 		centerPanel.add(newTask);
 		centerPanel.add(button);
 		centerPanel.add(taskTable);
