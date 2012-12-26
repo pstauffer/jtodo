@@ -8,6 +8,7 @@ public class JtodoRunner {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// just for test purposes
 		// new CRUDService().testCrudService();
 		new GUIController();
 	}
