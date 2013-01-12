@@ -31,11 +31,10 @@ public class DataHandler extends Observable implements IDataHandler {
 	public void getAllTasks() {
 		List<Task> taskList = daoFactory.getTaskDAO().findAll();
 		notify(taskList);
-		//return daoFactory.getTaskDAO().findAll();
-		
+
 	}
-	
-	private void notify(Object element){
+
+	private void notify(Object element) {
 		this.setChanged();
 		this.notifyObservers(element);
 	}
