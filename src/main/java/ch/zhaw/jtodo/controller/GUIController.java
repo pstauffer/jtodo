@@ -2,6 +2,7 @@ package ch.zhaw.jtodo.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Observer;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -12,30 +13,44 @@ import ch.zhaw.jtodo.dao.DAOFactory;
 import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
 import ch.zhaw.jtodo.model.DataHandler;
-import ch.zhaw.jtodo.model.JtodoModel;
+import ch.zhaw.jtodo.model.IDataHandler;
 import ch.zhaw.jtodo.view.JtodoView;
 
-public class GUIController {
+public class GUIController implements IGUIController{
 
-	private JtodoModel model;
+	private IDataHandler model;
 	private JtodoView view;
 
-	public GUIController() {
-		model = new JtodoModel();
-		view = new JtodoView(this);
+	public GUIController(IDataHandler model,JtodoView view) {
+		this.model = model;
+		this.view = view;
 	}
 
 	public void handleButtonAction() {
 		// spaeter wird hier zusätzlich der insert in die db hinzugefuegt
 		// System.out.println("Task wuerde hinzugefuegt");
-		model.countUp();
 		// diese methode wird spaeter benoetigt, um die taskliste an die view
 		// weiterzugeben.
-		model.getTaskList();
-		view.update(model);
+		//model.getTaskList();
+		//view.update(model);
 	}
 
-	public void initDB(DefaultTableModel taskModel,
+	@Override
+	public void addObserver(Observer view) {
+		model.addNewObserver(view);
+	}
+
+	@Override
+	public void getInitalData() {
+		model.getAllTasks();
+		model.getAllCategorys();
+	}
+	
+	
+	
+
+	//not valid in here
+	/*public void initDB(DefaultTableModel taskModel,
 			DefaultListModel categoryListModel,
 			DefaultComboBoxModel categoryBoxModel) {
 
@@ -61,13 +76,13 @@ public class GUIController {
 				taskModel.addRow(new Object[] { taskName, taskDesc, taskCat,
 						taskPrio, taskDate, blubb });
 			}
-		}
-
+		}*/
+		
+		/*not valid in here
 		List<Category> cat = handler.getAllCategorys();
 		for (int j = 0; j < cat.size(); j++) {
 			String categoryName = cat.get(j).getName();
 			categoryBoxModel.addElement(categoryName);
 			categoryListModel.addElement(categoryName);
-		}
-	}
+		}*/
 }

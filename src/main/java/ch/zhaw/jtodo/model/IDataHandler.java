@@ -1,6 +1,7 @@
 package ch.zhaw.jtodo.model;
 
 import java.util.List;
+import java.util.Observer;
 
 import ch.zhaw.jtodo.domain.Task;
 
@@ -8,8 +9,13 @@ public interface IDataHandler {
 
 	public void createTask(Task task);
 
-	public List<Task> getAllTasks();
+	public void getAllTasks();
 
 	public Task getSpecificTask();
+	
+	public void getAllCategorys();
+	
+	void addNewObserver(Observer view);
+		
 
 }
