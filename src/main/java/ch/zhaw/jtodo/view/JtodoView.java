@@ -46,15 +46,6 @@ public class JtodoView extends JFrame {
 		frame.getContentPane().setLayout(new BorderLayout());
 		this.control = control;
 
-		DefaultComboBoxModel categoryBoxModel = new DefaultComboBoxModel();
-		categoryBox = new JComboBox(categoryBoxModel);
-
-		DefaultListModel categoryListModel = new DefaultListModel();
-		categoryList = new JList(categoryListModel);
-		categoryList.setFixedCellWidth(40);
-		categoryList.setFixedCellHeight(40);
-		categoryListModel.setSize(40);
-
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
@@ -81,6 +72,12 @@ public class JtodoView extends JFrame {
 		DefaultTableModel taskModel = new DefaultTableModel();
 		taskTable = new JTable(taskModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		DefaultComboBoxModel categoryBoxModel = new DefaultComboBoxModel();
+		categoryBox = new JComboBox(categoryBoxModel);
+
+		DefaultListModel categoryListModel = new DefaultListModel();
+		categoryList = new JList(categoryListModel);
 
 		taskModel.addColumn("Task");
 		taskModel.addColumn("Description");
@@ -111,7 +108,7 @@ public class JtodoView extends JFrame {
 		statusField = new JTextField(20);
 		JButton addTaskButton = new JButton("Task adden");
 		addTaskButton.setBounds(516, 5, 116, 29);
-		categoryBox.setBounds(17, 6, 172, 27);
+		// categoryBox.setBounds(17, 6, 172, 27);
 
 		addTaskButton.addActionListener(new ActionListener() {
 			@Override
