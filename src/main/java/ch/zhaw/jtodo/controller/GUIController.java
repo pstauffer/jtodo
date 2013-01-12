@@ -35,12 +35,10 @@ public class GUIController implements IGUIController{
 		//view.update(model);
 	}
 
-	@Override
 	public void addObserver(Observer view) {
 		model.addNewObserver(view);
 	}
 
-	@Override
 	public void getInitalData() {
 		model.getAllTasks();
 		model.getAllCategorys();

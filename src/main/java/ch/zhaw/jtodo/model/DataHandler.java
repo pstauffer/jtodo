@@ -56,4 +56,10 @@ public class DataHandler extends Observable implements IDataHandler {
 		this.addObserver(view);
 	}
 
+	@Override
+	public void getTaskByCategory() {
+
+		
+	}
+
 }

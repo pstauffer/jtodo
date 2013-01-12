@@ -15,6 +15,8 @@ public interface IDataHandler {
 	
 	public void getAllCategorys();
 	
+	public void getTaskByCategory();
+	
 	void addNewObserver(Observer view);
 		
 
