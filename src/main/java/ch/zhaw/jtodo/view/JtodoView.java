@@ -6,19 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -45,18 +39,19 @@ public class JtodoView extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private JTextField statusField;
 	private JTextField newTaskTextField;
-	private final JComboBox categoryBox;
 	private JTable taskTable;
-	private JList categoryList;
+	private JTable categoryTable;
 	private IDataHandler model;
 	private IGUIController controller;
 	private DefaultTableModel taskModel;
+	private DefaultTableModel categoryModel;
+	private JTextField taskCount;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
-		controller = new GUIController(model,this);
+		controller = new GUIController(model, this);
 		controller.addObserver(this);
-		
+
 		JFrame frame = new JFrame("JTodo -  PS & YK");
 		frame.getContentPane().setLayout(new BorderLayout());
 
@@ -83,15 +78,25 @@ public class JtodoView extends JFrame implements Observer {
 		JMenuItem versionMenuItem = new JMenuItem("Version");
 		aboutMenu.add(versionMenuItem);
 
+		JTextField taskCount = new JTextField();
+		taskCount.setText("haha");
+
+		categoryModel = new DefaultTableModel();
+		categoryTable = new JTable(categoryModel);
+		categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		categoryModel.addColumn("Category");
+
+		TableColumn catCol = categoryTable.getColumnModel().getColumn(0);
+		catCol.setPreferredWidth(200);
+
+		TableRowSorter<TableModel> catSorter = new TableRowSorter<TableModel>(
+				categoryTable.getModel());
+		categoryTable.setRowSorter(catSorter);
+
 		taskModel = new DefaultTableModel();
 		taskTable = new JTable(taskModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-		DefaultComboBoxModel categoryBoxModel = new DefaultComboBoxModel();
-		categoryBox = new JComboBox(categoryBoxModel);
-
-		DefaultListModel categoryListModel = new DefaultListModel();
-		categoryList = new JList(categoryListModel);
 
 		taskModel.addColumn("Task");
 		taskModel.addColumn("Description");
@@ -100,28 +105,26 @@ public class JtodoView extends JFrame implements Observer {
 		taskModel.addColumn("Date");
 		taskModel.addColumn("Status");
 
-		TableColumn col = taskTable.getColumnModel().getColumn(0);
-		col.setPreferredWidth(200);
-		col = taskTable.getColumnModel().getColumn(1);
-		col.setPreferredWidth(200);
-		col = taskTable.getColumnModel().getColumn(2);
-		col.setPreferredWidth(80);
-		col = taskTable.getColumnModel().getColumn(3);
-		col.setPreferredWidth(80);
-		col = taskTable.getColumnModel().getColumn(4);
-		col.setPreferredWidth(80);
-		col = taskTable.getColumnModel().getColumn(5);
-		col.setPreferredWidth(40);
+		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
+		taskCol.setPreferredWidth(200);
+		taskCol = taskTable.getColumnModel().getColumn(1);
+		taskCol.setPreferredWidth(200);
+		taskCol = taskTable.getColumnModel().getColumn(2);
+		taskCol.setPreferredWidth(80);
+		taskCol = taskTable.getColumnModel().getColumn(3);
+		taskCol.setPreferredWidth(80);
+		taskCol = taskTable.getColumnModel().getColumn(4);
+		taskCol.setPreferredWidth(80);
+		taskCol = taskTable.getColumnModel().getColumn(5);
+		taskCol.setPreferredWidth(40);
 
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
+		TableRowSorter<TableModel> taskSorter = new TableRowSorter<TableModel>(
 				taskTable.getModel());
-		taskTable.setRowSorter(sorter);
-
+		taskTable.setRowSorter(taskSorter);
 
 		statusField = new JTextField(20);
 		JButton addTaskButton = new JButton("Task adden");
 		addTaskButton.setBounds(516, 5, 116, 29);
-		// categoryBox.setBounds(17, 6, 172, 27);
 
 		addTaskButton.addActionListener(new ActionListener() {
 			@Override
@@ -153,20 +156,24 @@ public class JtodoView extends JFrame implements Observer {
 		newTaskTextField = new JTextField(20);
 		newTaskTextField.setBounds(262, 4, 254, 28);
 
-		JTextField count = new JTextField(Integer.toString(taskTable
-				.getRowCount()) + " Tasks");
+		JPanel taskListCenterPanel = new JPanel();
+		JPanel taskListButtomPanel = new JPanel();
+		TaskListPanel.add(taskListCenterPanel, BorderLayout.CENTER);
+		TaskListPanel.add(taskListButtomPanel, BorderLayout.SOUTH);
+		taskListCenterPanel.add(taskTable);
+		taskListButtomPanel.add(taskCount);
 
-		JPanel centerPanel = new JPanel();
-		JPanel buttomPanel = new JPanel();
-		TaskListPanel.add(centerPanel, BorderLayout.CENTER);
-		TaskListPanel.add(buttomPanel, BorderLayout.SOUTH);
-		centerPanel.add(taskTable);
-		buttomPanel.add(count);
+		JPanel sortFilterCenterPanel = new JPanel();
+		SortFilterPanel.add(sortFilterCenterPanel, BorderLayout.CENTER);
+		sortFilterCenterPanel.add(categoryTable);
 
-		SortFilterPanel.add(categoryList);
-		NewTaskPanel.add(newTaskTextField);
-		NewTaskPanel.add(categoryBox);
-		NewTaskPanel.add(addTaskButton);
+		JPanel newTaskCenterPanel = new JPanel();
+		JPanel newTaskButtomPanel = new JPanel();
+		NewTaskPanel.add(newTaskCenterPanel, BorderLayout.CENTER);
+		NewTaskPanel.add(newTaskButtomPanel, BorderLayout.SOUTH);
+		newTaskCenterPanel.add(newTaskTextField);
+		newTaskButtomPanel.add(addTaskButton);
+
 		ArchivPanel.add(statusField);
 
 		JScrollPane scrollPaneTaskList = new JScrollPane(taskTable);
@@ -175,25 +182,29 @@ public class JtodoView extends JFrame implements Observer {
 		scrollPaneTaskList.setPreferredSize(new Dimension(400, 150));
 		TaskListPanel.add(scrollPaneTaskList);
 
+		JScrollPane scrollPaneCatList = new JScrollPane(categoryTable);
+		scrollPaneCatList
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneCatList.setPreferredSize(new Dimension(400, 150));
+		SortFilterPanel.add(scrollPaneCatList);
+
 		frame.setSize(755, 344);
 		frame.addWindowListener(new openWindowListener());
-		
-		//CHECK tis
-		//controller.initDB(taskModel, categoryListModel, categoryBoxModel);
+
 		frame.setVisible(true);
 	}
-	
-	public void SetController(GUIController controller){
+
+	public void SetController(GUIController controller) {
 		this.controller = controller;
 	}
-	
-	public void setModel(IDataHandler model){
+
+	public void setModel(IDataHandler model) {
 		this.model = model;
 	}
 
 	private void buttonAction(ActionEvent e) {
-		//Richtiger MVC ansatz, so müssen User Actions behandelt werden.
-		//controller.handleButtonAction();
+		// Richtiger MVC ansatz, so müssen User Actions behandelt werden.
+		// controller.handleButtonAction();
 	}
 
 	public void update() {
@@ -212,28 +223,31 @@ public class JtodoView extends JFrame implements Observer {
 	public String getNewTask() {
 		return newTaskTextField.getText();
 	}
-	
+
+	public void updateCategoryList(List<Category> categoryList) {
+
+		for (int i = 0; i < categoryList.size(); i++) {
+			{
+				String categoryName = categoryList.get(i).getName();
+
+				categoryModel.addRow(new Object[] { categoryName });
+			}
+		}
+	}
+
 	public void updateTaskList(List<Task> taskList) {
 
-		List<Task> tasks = taskList;
-		for (int i = 0; i < tasks.size(); i++) {
+		for (int i = 0; i < taskList.size(); i++) {
 			{
-				String taskName = tasks.get(i).getName();
-				String taskDesc = tasks.get(i).getDescription();
-				int taskCat = tasks.get(i).getCategoryid();
-				int taskPrio = tasks.get(i).getPriorityid();
-				Date taskDate = tasks.get(i).getDate();
-				int taskStat = tasks.get(i).getStatus();
-				// int taskID = tasks.get(i).getId();
-
-				JCheckBox blubb = new JCheckBox();
-				blubb.setBounds(99, 344, 28, 23);
-				if (taskStat == 1) {
-					blubb.setSelected(true);
-				}
+				String taskName = taskList.get(i).getName();
+				String taskDesc = taskList.get(i).getDescription();
+				int taskCat = taskList.get(i).getCategoryid();
+				int taskPrio = taskList.get(i).getPriorityid();
+				Date taskDate = taskList.get(i).getDate();
+				int taskStat = taskList.get(i).getStatus();
 
 				taskModel.addRow(new Object[] { taskName, taskDesc, taskCat,
-						taskPrio, taskDate, blubb });
+						taskPrio, taskDate, taskStat });
 			}
 		}
 	}
@@ -242,34 +256,34 @@ public class JtodoView extends JFrame implements Observer {
 	public void update(Observable arg0, Object element) {
 		// Use this to update Tasks and Categorys
 		Object listElement;
-		if(element instanceof List){
-			List list = (List)element;
-			
-			try{
+		if (element instanceof List) {
+			List list = (List) element;
+
+			try {
 				listElement = list.get(0);
-			}catch(Exception e){
+			} catch (Exception e) {
 				return;
 			}
-			
-			if(listElement instanceof Task){
+
+			if (listElement instanceof Task) {
 				List<Task> taskList = list;
 				updateTaskList(taskList);
+				System.out.println(taskCount.getText());
+				// String size = String.valueOf(taskList.size());
+				// taskCount.setText(size + "Tasks");
 			}
-			
-			if(listElement instanceof Category){
-				//do something else
+
+			if (listElement instanceof Category) {
+				List<Category> categoryList = list;
+				updateCategoryList(categoryList);
 			}
 		}
 	}
-	
-	class openWindowListener extends WindowAdapter
-	{
-	  public void windowOpened(WindowEvent e)
-	  {
-		  controller.getInitalData();
-	  }
+
+	class openWindowListener extends WindowAdapter {
+		public void windowOpened(WindowEvent e) {
+			controller.getInitalData();
+		}
 	}
 
 }
-
-   
