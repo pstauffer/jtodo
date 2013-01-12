@@ -1,9 +1,11 @@
 package ch.zhaw.jtodo.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.table.DefaultTableModel;
 
 import ch.zhaw.jtodo.dao.DAOFactory;
@@ -44,7 +46,20 @@ public class GUIController {
 			{
 				String taskName = tasks.get(i).getName();
 				String taskDesc = tasks.get(i).getDescription();
-				taskModel.addRow(new Object[] { taskName, taskDesc });
+				int taskCat = tasks.get(i).getCategoryid();
+				int taskPrio = tasks.get(i).getPriorityid();
+				Date taskDate = tasks.get(i).getDate();
+				int taskStat = tasks.get(i).getStatus();
+				// int taskID = tasks.get(i).getId();
+
+				JCheckBox blubb = new JCheckBox();
+				blubb.setBounds(99, 344, 28, 23);
+				if (taskStat == 1) {
+					blubb.setSelected(true);
+				}
+
+				taskModel.addRow(new Object[] { taskName, taskDesc, taskCat,
+						taskPrio, taskDate, blubb });
 			}
 		}
 
@@ -55,5 +70,4 @@ public class GUIController {
 			categoryListModel.addElement(categoryName);
 		}
 	}
-
 }
