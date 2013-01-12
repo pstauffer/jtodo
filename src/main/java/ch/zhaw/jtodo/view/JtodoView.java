@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
@@ -85,19 +87,31 @@ public class JtodoView extends JFrame implements Observer {
 		categoryTable = new JTable(categoryModel);
 		categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+		categoryModel.addColumn("ID");
 		categoryModel.addColumn("Category");
 
 		TableColumn catCol = categoryTable.getColumnModel().getColumn(0);
+		catCol.setPreferredWidth(40);
+		catCol = categoryTable.getColumnModel().getColumn(1);
 		catCol.setPreferredWidth(200);
 
 		TableRowSorter<TableModel> catSorter = new TableRowSorter<TableModel>(
 				categoryTable.getModel());
 		categoryTable.setRowSorter(catSorter);
 
+		categoryTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = categoryTable.getSelectedRow();
+				int selectedID = (Integer) categoryTable.getValueAt(row, 0);
+				System.out.println(selectedID);
+			}
+		});
+
 		taskModel = new DefaultTableModel();
 		taskTable = new JTable(taskModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+		taskModel.addColumn("ID");
 		taskModel.addColumn("Task");
 		taskModel.addColumn("Description");
 		taskModel.addColumn("Category");
@@ -106,21 +120,31 @@ public class JtodoView extends JFrame implements Observer {
 		taskModel.addColumn("Status");
 
 		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
-		taskCol.setPreferredWidth(200);
+		taskCol.setPreferredWidth(40);
 		taskCol = taskTable.getColumnModel().getColumn(1);
 		taskCol.setPreferredWidth(200);
 		taskCol = taskTable.getColumnModel().getColumn(2);
-		taskCol.setPreferredWidth(80);
+		taskCol.setPreferredWidth(200);
 		taskCol = taskTable.getColumnModel().getColumn(3);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(4);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(5);
+		taskCol.setPreferredWidth(80);
+		taskCol = taskTable.getColumnModel().getColumn(6);
 		taskCol.setPreferredWidth(40);
 
 		TableRowSorter<TableModel> taskSorter = new TableRowSorter<TableModel>(
 				taskTable.getModel());
 		taskTable.setRowSorter(taskSorter);
+
+		taskTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = taskTable.getSelectedRow();
+				int selectedID = (Integer) taskTable.getValueAt(row, 0);
+				System.out.println(selectedID);
+			}
+		});
 
 		statusField = new JTextField(20);
 		JButton addTaskButton = new JButton("Task adden");
@@ -228,9 +252,10 @@ public class JtodoView extends JFrame implements Observer {
 
 		for (int i = 0; i < categoryList.size(); i++) {
 			{
+				int categoryID = categoryList.get(i).getId();
 				String categoryName = categoryList.get(i).getName();
 
-				categoryModel.addRow(new Object[] { categoryName });
+				categoryModel.addRow(new Object[] { categoryID, categoryName });
 			}
 		}
 	}
@@ -239,6 +264,7 @@ public class JtodoView extends JFrame implements Observer {
 
 		for (int i = 0; i < taskList.size(); i++) {
 			{
+				int taskID = taskList.get(i).getId();
 				String taskName = taskList.get(i).getName();
 				String taskDesc = taskList.get(i).getDescription();
 				int taskCat = taskList.get(i).getCategoryid();
@@ -246,8 +272,8 @@ public class JtodoView extends JFrame implements Observer {
 				Date taskDate = taskList.get(i).getDate();
 				int taskStat = taskList.get(i).getStatus();
 
-				taskModel.addRow(new Object[] { taskName, taskDesc, taskCat,
-						taskPrio, taskDate, taskStat });
+				taskModel.addRow(new Object[] { taskID, taskName, taskDesc,
+						taskCat, taskPrio, taskDate, taskStat });
 			}
 
 			taskCount.setText(taskList.size() + " Tasks");
