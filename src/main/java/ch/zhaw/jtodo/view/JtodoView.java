@@ -31,10 +31,8 @@ import javax.swing.table.TableRowSorter;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.controller.IGUIController;
-import ch.zhaw.jtodo.dao.DAOFactory;
 import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
-import ch.zhaw.jtodo.model.DataHandler;
 import ch.zhaw.jtodo.model.IDataHandler;
 
 public class JtodoView extends JFrame implements Observer {
@@ -146,14 +144,12 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
-		statusField = new JTextField(20);
 		JButton addTaskButton = new JButton("Task adden");
-		addTaskButton.setBounds(516, 5, 116, 29);
 
 		addTaskButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buttonAction(e);
+				addTaskButtonAction(e);
 			}
 		});
 
@@ -178,7 +174,7 @@ public class JtodoView extends JFrame implements Observer {
 		tabs.addTab("Archiv", null, ArchivPanel, null);
 
 		newTaskTextField = new JTextField(20);
-		newTaskTextField.setBounds(262, 4, 254, 28);
+		statusField = new JTextField(20);
 
 		JPanel taskListCenterPanel = new JPanel();
 		JPanel taskListButtomPanel = new JPanel();
@@ -192,11 +188,9 @@ public class JtodoView extends JFrame implements Observer {
 		sortFilterCenterPanel.add(categoryTable);
 
 		JPanel newTaskCenterPanel = new JPanel();
-		JPanel newTaskButtomPanel = new JPanel();
 		NewTaskPanel.add(newTaskCenterPanel, BorderLayout.CENTER);
-		NewTaskPanel.add(newTaskButtomPanel, BorderLayout.SOUTH);
 		newTaskCenterPanel.add(newTaskTextField);
-		newTaskButtomPanel.add(addTaskButton);
+		newTaskCenterPanel.add(addTaskButton);
 
 		ArchivPanel.add(statusField);
 
@@ -226,22 +220,9 @@ public class JtodoView extends JFrame implements Observer {
 		this.model = model;
 	}
 
-	private void buttonAction(ActionEvent e) {
+	private void addTaskButtonAction(ActionEvent e) {
 		// Richtiger MVC ansatz, so müssen User Actions behandelt werden.
-		// controller.handleButtonAction();
-	}
-
-	public void update() {
-		// Use controller to do this
-		Date now = new Date();
-		Date mod = new Date();
-		Task task = new Task(newTaskTextField.getText(), "description", 1, 1,
-				now, 1, mod);
-
-		DataHandler handler = new DataHandler(new DAOFactory());
-		handler.createTask(task);
-		statusField.setText("added the Task: " + this.getNewTask());
-
+		controller.addTaskButtonAction();
 	}
 
 	public String getNewTask() {
