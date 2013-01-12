@@ -78,8 +78,8 @@ public class JtodoView extends JFrame implements Observer {
 		JMenuItem versionMenuItem = new JMenuItem("Version");
 		aboutMenu.add(versionMenuItem);
 
-		JTextField taskCount = new JTextField();
-		taskCount.setText("haha");
+		taskCount = new JTextField();
+		taskCount.setText("keine Tasks");
 
 		categoryModel = new DefaultTableModel();
 		categoryTable = new JTable(categoryModel);
@@ -249,6 +249,8 @@ public class JtodoView extends JFrame implements Observer {
 				taskModel.addRow(new Object[] { taskName, taskDesc, taskCat,
 						taskPrio, taskDate, taskStat });
 			}
+
+			taskCount.setText(taskList.size() + " Tasks");
 		}
 	}
 
@@ -268,9 +270,6 @@ public class JtodoView extends JFrame implements Observer {
 			if (listElement instanceof Task) {
 				List<Task> taskList = list;
 				updateTaskList(taskList);
-				System.out.println(taskCount.getText());
-				// String size = String.valueOf(taskList.size());
-				// taskCount.setText(size + "Tasks");
 			}
 
 			if (listElement instanceof Category) {
