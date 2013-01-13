@@ -33,6 +33,10 @@ public class JtodoTableModel extends AbstractTableModel {
 		return columnNames[col];
 	}
 
+	public Class getColumnClass(int c) {
+		return getValueAt(0, c).getClass();
+	}
+
 	@Override
 	public Object getValueAt(int row, int col) {
 		Task task = (Task) datalist.get(row);
@@ -47,9 +51,13 @@ public class JtodoTableModel extends AbstractTableModel {
 		    case 3:
 		     return String.valueOf(task.getPriorityid());
 		    case 4:
-			     return String.valueOf(task.getStatus());
+		    	 return task.getDate().toString();   
 		    case 5:
-		    	 return task.getDate().toString();
+		    	if(task.getStatus()==1){
+		    		return new Boolean(true);
+		    	}else if(task.getStatus()==0){
+		    		return new Boolean(false);
+		    	}
 		    default:
 		     return null;
 		   }

@@ -157,10 +157,11 @@ public class JtodoView extends JFrame implements Observer {
 
 		taskTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				int row = taskTable.getSelectedRow();
+				//does not work anymore
+				/*int row = taskTable.getSelectedRow();
 				Task task = (Task) taskTable.getValueAt(row, 0);
 				int selectedID = task.getId();
-				System.out.println(selectedID);
+				System.out.println(selectedID);*/
 			}
 		});
 
@@ -284,9 +285,9 @@ public class JtodoView extends JFrame implements Observer {
 		}*/
 		
 		jtablemodel.removeAllTasks();
-		taskCount.setText(jtablemodel.getRowCount() + " Tasks");
 		
 		jtablemodel.addTaskList(taskList);
+		taskCount.setText(jtablemodel.getRowCount() + " Tasks");
 	}
 
 	@Override
