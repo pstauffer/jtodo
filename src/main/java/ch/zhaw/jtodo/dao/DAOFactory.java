@@ -1,33 +1,28 @@
 package ch.zhaw.jtodo.dao;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import ch.zhaw.jtodo.dao.hibernate.CategoryHibernateDAO;
 import ch.zhaw.jtodo.dao.hibernate.HibernateUtil;
 import ch.zhaw.jtodo.dao.hibernate.PriorityHibernateDAO;
 import ch.zhaw.jtodo.dao.hibernate.ReminderHibernateDAO;
 import ch.zhaw.jtodo.dao.hibernate.TaskHibernateDAO;
-import ch.zhaw.jtodo.domain.Category;
-import ch.zhaw.jtodo.domain.Priority;
 
 /**
  * Konkrete Factory Implementation definiert durch Interface @IDAOFactory
  * Verteilt die einzelnen instanzen der Data Access Objects
+ * 
  * @author yannik
  */
-public class DAOFactory implements IDAOFactory{
-    private SessionFactory factory;
-  
-    /**
-     * Returns ICategoryDAO
-     */
+public class DAOFactory implements IDAOFactory {
+
+	/**
+	 * Returns ICategoryDAO
+	 */
 	public ICategoryDAO getCategoryDAO() {
 		CategoryHibernateDAO dao = new CategoryHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
-	
+
 	/**
 	 * Returns IReminderDAO
 	 */
@@ -36,7 +31,7 @@ public class DAOFactory implements IDAOFactory{
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
-	
+
 	/**
 	 * Returns IPriorityDAO
 	 */
@@ -45,7 +40,7 @@ public class DAOFactory implements IDAOFactory{
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
-	
+
 	/**
 	 * Returns ITaskDAO
 	 */

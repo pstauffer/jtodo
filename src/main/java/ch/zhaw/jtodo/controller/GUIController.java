@@ -29,21 +29,16 @@ public class GUIController implements IGUIController {
 	}
 
 	@Override
-	public void addTaskButtonAction() {
-		System.out.println("haha");
-		Date now = new Date();
+	public void addTaskButtonAction(String taskName, String taskDescription,
+			int catID, Date date) {
 		Date mod = new Date();
-		// Task task = new Task(newTaskTextField.getText(), "description", 1, 1,
-		// now, 1, mod);
 
-		Task task = new Task("haha", "description", 1, 1, now, 1, mod);
+		Task task = new Task(taskName, taskDescription, catID, 1, date, 1, mod);
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 		handler.createTask(task);
-		// statusField.setText("added the Task: " + this.getNewTask());
-		// model.getTaskList();
-		// view.update(model);
-
+		// notify
+		model.getAllTasks();
 	}
 
 }

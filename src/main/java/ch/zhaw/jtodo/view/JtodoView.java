@@ -8,7 +8,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
@@ -51,7 +50,7 @@ public class JtodoView extends JFrame implements Observer {
 	private JComboBox prioBox;
 	private IDataHandler model;
 	private IGUIController controller;
-	private DefaultTableModel taskModel;
+	private DefaultTableModel taskTableModel;
 	private DefaultTableModel categoryTableModel;
 	private DefaultComboBoxModel categoryBoxModel;
 	private DefaultComboBoxModel prioBoxModel;
@@ -106,12 +105,12 @@ public class JtodoView extends JFrame implements Observer {
 		categoryTable = new JTable(categoryTableModel);
 		categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		categoryTableModel.addColumn("ID");
+		// categoryTableModel.addColumn("ID");
 		categoryTableModel.addColumn("Category");
 
+		// TableColumn catCol = categoryTable.getColumnModel().getColumn(0);
+		// catCol.setPreferredWidth(40);
 		TableColumn catCol = categoryTable.getColumnModel().getColumn(0);
-		catCol.setPreferredWidth(40);
-		catCol = categoryTable.getColumnModel().getColumn(1);
 		catCol.setPreferredWidth(200);
 
 		TableRowSorter<TableModel> catSorter = new TableRowSorter<TableModel>(
@@ -121,36 +120,34 @@ public class JtodoView extends JFrame implements Observer {
 		categoryTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = categoryTable.getSelectedRow();
-				int selectedID = (Integer) categoryTable.getValueAt(row, 0);
+				Category cat = (Category) categoryTable.getValueAt(row, 0);
+				int selectedID = cat.getId();
 				System.out.println(selectedID);
 			}
 		});
 
-		taskModel = new DefaultTableModel();
-		taskTable = new JTable(taskModel);
+		taskTableModel = new DefaultTableModel();
+		taskTable = new JTable(taskTableModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		taskModel.addColumn("ID");
-		taskModel.addColumn("Task");
-		taskModel.addColumn("Description");
-		taskModel.addColumn("Category");
-		taskModel.addColumn("Priority");
-		taskModel.addColumn("Date");
-		taskModel.addColumn("Status");
+		taskTableModel.addColumn("Task");
+		taskTableModel.addColumn("Description");
+		taskTableModel.addColumn("Category");
+		taskTableModel.addColumn("Priority");
+		taskTableModel.addColumn("Date");
+		taskTableModel.addColumn("Status");
 
 		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
-		taskCol.setPreferredWidth(40);
+		taskCol.setPreferredWidth(200);
 		taskCol = taskTable.getColumnModel().getColumn(1);
 		taskCol.setPreferredWidth(200);
 		taskCol = taskTable.getColumnModel().getColumn(2);
-		taskCol.setPreferredWidth(200);
+		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(3);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(4);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(5);
-		taskCol.setPreferredWidth(80);
-		taskCol = taskTable.getColumnModel().getColumn(6);
 		taskCol.setPreferredWidth(40);
 
 		TableRowSorter<TableModel> taskSorter = new TableRowSorter<TableModel>(
@@ -160,7 +157,8 @@ public class JtodoView extends JFrame implements Observer {
 		taskTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = taskTable.getSelectedRow();
-				int selectedID = (Integer) taskTable.getValueAt(row, 0);
+				Task task = (Task) taskTable.getValueAt(row, 0);
+				int selectedID = task.getId();
 				System.out.println(selectedID);
 			}
 		});
@@ -170,7 +168,15 @@ public class JtodoView extends JFrame implements Observer {
 		addTaskButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				addTaskButtonAction(e);
+				// Richtiger MVC ansatz, so müssen User Actions behandelt
+				// werden.
+				Date date = dateChooser.getDate();
+				String taskName = newTaskNameField.getText();
+				String taskDescription = newTaskDescriptionField.getText();
+				Category cat = (Category) categoryBox.getSelectedItem();
+				int catID = cat.getId();
+				controller.addTaskButtonAction(taskName, taskDescription,
+						catID, date);
 			}
 		});
 
@@ -198,6 +204,11 @@ public class JtodoView extends JFrame implements Observer {
 		newTaskDescriptionField = new JTextField(20);
 		statusField = new JTextField(20);
 
+		dateChooser = new JSpinnerDateEditor();
+		Date date = new Date();
+		dateChooser.setDate(date);
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+
 		JPanel taskListCenterPanel = new JPanel();
 		JPanel taskListButtomPanel = new JPanel();
 		TaskListPanel.add(taskListCenterPanel, BorderLayout.CENTER);
@@ -217,18 +228,13 @@ public class JtodoView extends JFrame implements Observer {
 		newTaskCenterPanel.add(newTaskDescriptionField);
 		newTaskCenterPanel.add(categoryBox);
 		newTaskCenterPanel.add(prioBox);
+		newTaskCenterPanel.add(dateChooser);
 		newTaskButtomPanel.add(addTaskButton);
 
 		JPanel archivCenterPanel = new JPanel();
 		JPanel archivButtomPanel = new JPanel();
 		ArchivPanel.add(archivCenterPanel, BorderLayout.CENTER);
 		ArchivPanel.add(archivButtomPanel, BorderLayout.SOUTH);
-
-		dateChooser = new JSpinnerDateEditor();
-		Date date = new Date();
-		dateChooser.setDate(date);
-		dateChooser.setDateFormatString("dd/MM/yyyy");
-		archivCenterPanel.add(dateChooser);
 
 		archivButtomPanel.add(statusField);
 
@@ -258,53 +264,24 @@ public class JtodoView extends JFrame implements Observer {
 		this.model = model;
 	}
 
-	private void addTaskButtonAction(ActionEvent e) {
-		// Richtiger MVC ansatz, so müssen User Actions behandelt werden.
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(dateChooser.getDate());
-		System.out.println(calendar.get(Calendar.YEAR));
-		System.out.println(calendar.get(Calendar.MONTH));
-		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
-
-		controller.addTaskButtonAction();
-	}
-
 	public String getNewTask() {
 		return newTaskNameField.getText();
 	}
 
 	public void updateCategoryList(List<Category> categoryList) {
 
-		for (int i = 0; i < categoryList.size(); i++) {
-			{
-				int categoryID = categoryList.get(i).getId();
-				String categoryName = categoryList.get(i).getName();
-
-				categoryTableModel.addRow(new Object[] { categoryID,
-						categoryName });
-				categoryBoxModel.addElement(categoryName);
-			}
+		for (Category category : categoryList) {
+			categoryTableModel.addRow(new Object[] { category });
+			categoryBoxModel.addElement(category);
 		}
 	}
 
 	public void updateTaskList(List<Task> taskList) {
 
-		for (int i = 0; i < taskList.size(); i++) {
-			{
-				int taskID = taskList.get(i).getId();
-				String taskName = taskList.get(i).getName();
-				String taskDesc = taskList.get(i).getDescription();
-				int taskCat = taskList.get(i).getCategoryid();
-				int taskPrio = taskList.get(i).getPriorityid();
-				Date taskDate = taskList.get(i).getDate();
-				int taskStat = taskList.get(i).getStatus();
-
-				taskModel.addRow(new Object[] { taskID, taskName, taskDesc,
-						taskCat, taskPrio, taskDate, taskStat });
-			}
-
-			taskCount.setText(taskList.size() + " Tasks");
+		for (Task task : taskList) {
+			taskTableModel.addRow(new Object[] { task });
 		}
+		taskCount.setText(taskList.size() + " Tasks");
 	}
 
 	@Override

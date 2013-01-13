@@ -106,4 +106,8 @@ public class Task implements java.io.Serializable {
 		this.modifiydate = modifiydate;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
 }
