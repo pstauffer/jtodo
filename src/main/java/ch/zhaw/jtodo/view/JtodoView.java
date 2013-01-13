@@ -57,6 +57,7 @@ public class JtodoView extends JFrame implements Observer {
 	private DefaultComboBoxModel prioBoxModel;
 	private JTextField taskCount;
 	private JSpinnerDateEditor dateChooser;
+	private JtodoTableModel jtablemodel;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
@@ -133,16 +134,9 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
-		taskTableModel = new DefaultTableModel();
-		taskTable = new JTable(taskTableModel);
+		jtablemodel = new JtodoTableModel();
+		taskTable = new JTable(jtablemodel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-		taskTableModel.addColumn("Task");
-		taskTableModel.addColumn("Description");
-		taskTableModel.addColumn("Category");
-		taskTableModel.addColumn("Priority");
-		taskTableModel.addColumn("Date");
-		taskTableModel.addColumn("Status");
 
 		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
 		taskCol.setPreferredWidth(200);
@@ -282,13 +276,17 @@ public class JtodoView extends JFrame implements Observer {
 	}
 
 	public void updateTaskList(List<Task> taskList) {
-		for (int i = 1; i < taskTableModel.getRowCount(); i++) {
+		/*for (int i = 1; i < taskTableModel.getRowCount(); i++) {
 			taskTableModel.removeRow(i);
 		}
 		for (Task task : taskList) {
 			taskTableModel.addRow(new Object[] { task });
-		}
-		taskCount.setText(taskTableModel.getRowCount() + " Tasks");
+		}*/
+		
+		jtablemodel.removeAllTasks();
+		taskCount.setText(jtablemodel.getRowCount() + " Tasks");
+		
+		jtablemodel.addTaskList(taskList);
 	}
 
 	@Override
