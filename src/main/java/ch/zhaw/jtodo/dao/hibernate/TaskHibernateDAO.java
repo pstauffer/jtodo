@@ -1,6 +1,11 @@
 package ch.zhaw.jtodo.dao.hibernate;
 
+import java.sql.Date;
 import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import ch.zhaw.jtodo.dao.ITaskDAO;
 import ch.zhaw.jtodo.domain.Category;
@@ -19,7 +24,12 @@ public class TaskHibernateDAO extends GenericHibernateDAO<Task, Integer> impleme
 
 	@Override
 	public List<Task> getTaskByCategory(Category category) {
-		return null;
+		
+		List tasks = this.getSession().createCriteria(Task.class)
+	    .add( Restrictions.eq("categoryid", category.getId()) )
+	    .list();
+		
+		return tasks;
 	}
 
 }

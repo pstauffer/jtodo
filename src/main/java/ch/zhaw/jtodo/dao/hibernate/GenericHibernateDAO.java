@@ -65,6 +65,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             entity = (T) session.get(this.getPersistentClass(), id);
             if (entity==null) {
                 //log.debug("get successful  but no instance found");
+            	return null;
             }
             else {
                 //log.debug("get successful, instance found");

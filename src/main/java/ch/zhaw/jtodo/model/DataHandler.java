@@ -56,9 +56,16 @@ public class DataHandler extends Observable implements IDataHandler {
 	}
 
 	@Override
-	public void getTaskByCategory() {
-
+	public void getTaskByCategory(int id) {
+		Category cat = daoFactory.getCategoryDAO().findById(id);
 		
+		if(cat==null){
+			return;
+		}
+		
+		List<Task> taskList = daoFactory.getTaskDAO().getTaskByCategory(cat);
+		
+		notify(taskList);
 	}
 
 }
