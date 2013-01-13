@@ -63,12 +63,8 @@ public class DataHandler extends Observable implements IDataHandler {
 			return;
 		}
 
-		List<Task> filteredTaskList = daoFactory.getTaskDAO()
-				.getTaskByCategory(cat);
-		notify(filteredTaskList);
-
-		// List<Task> taskList = daoFactory.getTaskDAO().getTaskByCategory(cat);
-		// notify(taskList);
+		List<Task> taskList = daoFactory.getTaskDAO().getTaskByCategory(cat);
+		notify(taskList);
 	}
 
 }

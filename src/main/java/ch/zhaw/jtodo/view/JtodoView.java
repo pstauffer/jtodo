@@ -41,24 +41,21 @@ import com.toedter.calendar.JSpinnerDateEditor;
 
 public class JtodoView extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
-	private JTextField filteredTaskCount;
+	private JTextField archivTextField;
 	private JTextField newTaskNameField;
 	private JTextField newTaskDescriptionField;
 	private JTable taskTable;
-	private JTable filteredTaskTable;
 	private JTable categoryTable;
 	private JComboBox categoryBox;
 	private JComboBox prioBox;
 	private IDataHandler model;
 	private IGUIController controller;
 	private DefaultTableModel taskTableModel;
-	private DefaultTableModel filteredTaskTableModel;
 	private DefaultTableModel categoryTableModel;
 	private DefaultComboBoxModel categoryBoxModel;
 	private DefaultComboBoxModel prioBoxModel;
 	private JTextField taskCount;
 	private JSpinnerDateEditor dateChooser;
-	private int filteredRowCount;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
@@ -155,35 +152,6 @@ public class JtodoView extends JFrame implements Observer {
 				taskTable.getModel());
 		taskTable.setRowSorter(taskSorter);
 
-		filteredTaskTableModel = new DefaultTableModel();
-		filteredTaskTable = new JTable(filteredTaskTableModel);
-		filteredTaskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-		filteredTaskTableModel.addColumn("Task");
-		filteredTaskTableModel.addColumn("Description");
-		filteredTaskTableModel.addColumn("Category");
-		filteredTaskTableModel.addColumn("Priority");
-		filteredTaskTableModel.addColumn("Date");
-		filteredTaskTableModel.addColumn("Status");
-
-		TableColumn filteredTaskCol = filteredTaskTable.getColumnModel()
-				.getColumn(0);
-		filteredTaskCol.setPreferredWidth(200);
-		filteredTaskCol = filteredTaskTable.getColumnModel().getColumn(1);
-		filteredTaskCol.setPreferredWidth(200);
-		filteredTaskCol = filteredTaskTable.getColumnModel().getColumn(2);
-		filteredTaskCol.setPreferredWidth(80);
-		filteredTaskCol = filteredTaskTable.getColumnModel().getColumn(3);
-		filteredTaskCol.setPreferredWidth(80);
-		filteredTaskCol = filteredTaskTable.getColumnModel().getColumn(4);
-		filteredTaskCol.setPreferredWidth(80);
-		filteredTaskCol = filteredTaskTable.getColumnModel().getColumn(5);
-		filteredTaskCol.setPreferredWidth(40);
-
-		TableRowSorter<TableModel> filteredTaskSorter = new TableRowSorter<TableModel>(
-				filteredTaskTable.getModel());
-		filteredTaskTable.setRowSorter(filteredTaskSorter);
-
 		taskTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = taskTable.getSelectedRow();
@@ -219,21 +187,21 @@ public class JtodoView extends JFrame implements Observer {
 		JPanel NewTaskPanel = new JPanel();
 		NewTaskPanel.setLayout(new BorderLayout(0, 0));
 
-		JPanel SortFilterPanel = new JPanel();
-		SortFilterPanel.setLayout(new BorderLayout(0, 0));
+		JPanel FilterPanel = new JPanel();
+		FilterPanel.setLayout(new BorderLayout(0, 0));
 
 		JPanel ArchivPanel = new JPanel();
 		ArchivPanel.setLayout(new BorderLayout(0, 0));
 
 		tabs.addTab("Task Liste", null, TaskListPanel, null);
 		tabs.addTab("New Task", null, NewTaskPanel, null);
-		tabs.addTab("Sort / Filter", null, SortFilterPanel, null);
+		tabs.addTab("Filter", null, FilterPanel, null);
 		tabs.addTab("Archiv", null, ArchivPanel, null);
 
 		newTaskNameField = new JTextField(20);
 		newTaskDescriptionField = new JTextField(20);
-		filteredTaskCount = new JTextField(20);
-		filteredRowCount = filteredTaskTableModel.getRowCount();
+		archivTextField = new JTextField(20);
+		archivTextField.setText("jajaa");
 
 		dateChooser = new JSpinnerDateEditor();
 		Date date = new Date();
@@ -248,12 +216,9 @@ public class JtodoView extends JFrame implements Observer {
 		taskListButtomPanel.add(taskCount);
 
 		JPanel sortFilterNorthPanel = new JPanel();
-		JPanel sortFilterButtomPanel = new JPanel();
-		SortFilterPanel.add(sortFilterNorthPanel, BorderLayout.NORTH);
-		SortFilterPanel.add(sortFilterButtomPanel, BorderLayout.SOUTH);
+		FilterPanel.add(sortFilterNorthPanel, BorderLayout.NORTH);
 
 		sortFilterNorthPanel.add(categoryTable);
-		// sortFilterButtomPanel.add(filteredTaskTable);
 
 		JPanel newTaskCenterPanel = new JPanel();
 		JPanel newTaskButtomPanel = new JPanel();
@@ -271,15 +236,7 @@ public class JtodoView extends JFrame implements Observer {
 		ArchivPanel.add(archivCenterPanel, BorderLayout.CENTER);
 		ArchivPanel.add(archivButtomPanel, BorderLayout.SOUTH);
 
-		archivCenterPanel.add(filteredTaskTable);
-		archivButtomPanel.add(filteredTaskCount);
-
-		JScrollPane scrollPaneFilterTaskList = new JScrollPane(
-				filteredTaskTable);
-		scrollPaneFilterTaskList
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneFilterTaskList.setPreferredSize(new Dimension(400, 150));
-		ArchivPanel.add(scrollPaneFilterTaskList);
+		archivButtomPanel.add(archivTextField);
 
 		JScrollPane scrollPaneTaskList = new JScrollPane(taskTable);
 		scrollPaneTaskList
@@ -291,7 +248,7 @@ public class JtodoView extends JFrame implements Observer {
 		scrollPaneCatList
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPaneCatList.setPreferredSize(new Dimension(400, 150));
-		SortFilterPanel.add(scrollPaneCatList);
+		FilterPanel.add(scrollPaneCatList);
 
 		frame.setSize(755, 344);
 		frame.addWindowListener(new openWindowListener());
@@ -307,10 +264,6 @@ public class JtodoView extends JFrame implements Observer {
 		this.model = model;
 	}
 
-	public String getNewTask() {
-		return newTaskNameField.getText();
-	}
-
 	public void updateCategoryList(List<Category> categoryList) {
 
 		for (Category category : categoryList) {
@@ -320,20 +273,13 @@ public class JtodoView extends JFrame implements Observer {
 	}
 
 	public void updateTaskList(List<Task> taskList) {
-
+		for (int i = 1; i < taskTableModel.getRowCount(); i++) {
+			taskTableModel.removeRow(i);
+		}
 		for (Task task : taskList) {
 			taskTableModel.addRow(new Object[] { task });
 		}
 		taskCount.setText(taskTableModel.getRowCount() + " Tasks");
-	}
-
-	public void updateFilteredTaskList(List<Task> filteredTaskList) {
-		System.out.println(filteredRowCount);
-
-		for (Task task : filteredTaskList) {
-			filteredTaskTableModel.addRow(new Object[] { task });
-		}
-		filteredTaskCount.setText(filteredRowCount + " Tasks");
 	}
 
 	@Override
@@ -342,7 +288,6 @@ public class JtodoView extends JFrame implements Observer {
 		Object listElement;
 		if (element instanceof List) {
 			List list = (List) element;
-			List filteredTaskList = (List) element;
 
 			try {
 				listElement = list.get(0);
@@ -353,11 +298,6 @@ public class JtodoView extends JFrame implements Observer {
 			if (listElement instanceof Task) {
 				List<Task> taskList = list;
 				updateTaskList(taskList);
-			}
-
-			if (listElement instanceof Task) {
-				List<Task> filteredTask = list;
-				updateFilteredTaskList(filteredTask);
 			}
 
 			if (listElement instanceof Category) {
