@@ -8,12 +8,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,17 +38,25 @@ import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
 import ch.zhaw.jtodo.model.IDataHandler;
 
+import com.toedter.calendar.JSpinnerDateEditor;
+
 public class JtodoView extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private JTextField statusField;
-	private JTextField newTaskTextField;
+	private JTextField newTaskNameField;
+	private JTextField newTaskDescriptionField;
 	private JTable taskTable;
 	private JTable categoryTable;
+	private JComboBox categoryBox;
+	private JComboBox prioBox;
 	private IDataHandler model;
 	private IGUIController controller;
 	private DefaultTableModel taskModel;
-	private DefaultTableModel categoryModel;
+	private DefaultTableModel categoryTableModel;
+	private DefaultComboBoxModel categoryBoxModel;
+	private DefaultComboBoxModel prioBoxModel;
 	private JTextField taskCount;
+	private JSpinnerDateEditor dateChooser;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
@@ -81,12 +92,22 @@ public class JtodoView extends JFrame implements Observer {
 		taskCount = new JTextField();
 		taskCount.setText("keine Tasks");
 
-		categoryModel = new DefaultTableModel();
-		categoryTable = new JTable(categoryModel);
+		categoryBoxModel = new DefaultComboBoxModel();
+		categoryBox = new JComboBox(categoryBoxModel);
+		String emptyCat = " ";
+		categoryBox.addItem(emptyCat);
+
+		prioBoxModel = new DefaultComboBoxModel();
+		prioBox = new JComboBox(prioBoxModel);
+		String prio = "prio1";
+		prioBox.addItem(prio);
+
+		categoryTableModel = new DefaultTableModel();
+		categoryTable = new JTable(categoryTableModel);
 		categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		categoryModel.addColumn("ID");
-		categoryModel.addColumn("Category");
+		categoryTableModel.addColumn("ID");
+		categoryTableModel.addColumn("Category");
 
 		TableColumn catCol = categoryTable.getColumnModel().getColumn(0);
 		catCol.setPreferredWidth(40);
@@ -173,7 +194,8 @@ public class JtodoView extends JFrame implements Observer {
 		tabs.addTab("Sort / Filter", null, SortFilterPanel, null);
 		tabs.addTab("Archiv", null, ArchivPanel, null);
 
-		newTaskTextField = new JTextField(20);
+		newTaskNameField = new JTextField(20);
+		newTaskDescriptionField = new JTextField(20);
 		statusField = new JTextField(20);
 
 		JPanel taskListCenterPanel = new JPanel();
@@ -188,11 +210,27 @@ public class JtodoView extends JFrame implements Observer {
 		sortFilterCenterPanel.add(categoryTable);
 
 		JPanel newTaskCenterPanel = new JPanel();
+		JPanel newTaskButtomPanel = new JPanel();
 		NewTaskPanel.add(newTaskCenterPanel, BorderLayout.CENTER);
-		newTaskCenterPanel.add(newTaskTextField);
-		newTaskCenterPanel.add(addTaskButton);
+		NewTaskPanel.add(newTaskButtomPanel, BorderLayout.SOUTH);
+		newTaskCenterPanel.add(newTaskNameField);
+		newTaskCenterPanel.add(newTaskDescriptionField);
+		newTaskCenterPanel.add(categoryBox);
+		newTaskCenterPanel.add(prioBox);
+		newTaskButtomPanel.add(addTaskButton);
 
-		ArchivPanel.add(statusField);
+		JPanel archivCenterPanel = new JPanel();
+		JPanel archivButtomPanel = new JPanel();
+		ArchivPanel.add(archivCenterPanel, BorderLayout.CENTER);
+		ArchivPanel.add(archivButtomPanel, BorderLayout.SOUTH);
+
+		dateChooser = new JSpinnerDateEditor();
+		Date date = new Date();
+		dateChooser.setDate(date);
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+		archivCenterPanel.add(dateChooser);
+
+		archivButtomPanel.add(statusField);
 
 		JScrollPane scrollPaneTaskList = new JScrollPane(taskTable);
 		scrollPaneTaskList
@@ -222,11 +260,17 @@ public class JtodoView extends JFrame implements Observer {
 
 	private void addTaskButtonAction(ActionEvent e) {
 		// Richtiger MVC ansatz, so müssen User Actions behandelt werden.
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dateChooser.getDate());
+		System.out.println(calendar.get(Calendar.YEAR));
+		System.out.println(calendar.get(Calendar.MONTH));
+		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
+
 		controller.addTaskButtonAction();
 	}
 
 	public String getNewTask() {
-		return newTaskTextField.getText();
+		return newTaskNameField.getText();
 	}
 
 	public void updateCategoryList(List<Category> categoryList) {
@@ -236,7 +280,9 @@ public class JtodoView extends JFrame implements Observer {
 				int categoryID = categoryList.get(i).getId();
 				String categoryName = categoryList.get(i).getName();
 
-				categoryModel.addRow(new Object[] { categoryID, categoryName });
+				categoryTableModel.addRow(new Object[] { categoryID,
+						categoryName });
+				categoryBoxModel.addElement(categoryName);
 			}
 		}
 	}
