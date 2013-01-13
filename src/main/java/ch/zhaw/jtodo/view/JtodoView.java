@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -74,10 +75,18 @@ public class JtodoView extends JFrame implements Observer {
 		fileMenu.add(newTaskMenuItem);
 		JMenuItem closeMenuItem = new JMenuItem("Close");
 		fileMenu.add(closeMenuItem);
+
 		closeMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.exit(EXIT_ON_CLOSE);
+				int eingabe = JOptionPane.showConfirmDialog(null,
+						"JToDo wirklick schliessen?", "Close?",
+						JOptionPane.YES_NO_OPTION);
+
+				if (eingabe == JOptionPane.YES_OPTION) {
+					System.exit(EXIT_ON_CLOSE);
+				}
+
 			}
 		});
 
