@@ -4,14 +4,19 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,23 +34,29 @@ import javax.swing.table.TableRowSorter;
 
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.controller.IGUIController;
-import ch.zhaw.jtodo.dao.DAOFactory;
 import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
-import ch.zhaw.jtodo.model.DataHandler;
 import ch.zhaw.jtodo.model.IDataHandler;
+
+import com.toedter.calendar.JSpinnerDateEditor;
 
 public class JtodoView extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private JTextField statusField;
-	private JTextField newTaskTextField;
+	private JTextField newTaskNameField;
+	private JTextField newTaskDescriptionField;
 	private JTable taskTable;
 	private JTable categoryTable;
+	private JComboBox categoryBox;
+	private JComboBox prioBox;
 	private IDataHandler model;
 	private IGUIController controller;
 	private DefaultTableModel taskModel;
-	private DefaultTableModel categoryModel;
+	private DefaultTableModel categoryTableModel;
+	private DefaultComboBoxModel categoryBoxModel;
+	private DefaultComboBoxModel prioBoxModel;
 	private JTextField taskCount;
+	private JSpinnerDateEditor dateChooser;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
@@ -78,26 +89,48 @@ public class JtodoView extends JFrame implements Observer {
 		JMenuItem versionMenuItem = new JMenuItem("Version");
 		aboutMenu.add(versionMenuItem);
 
-		JTextField taskCount = new JTextField();
-		taskCount.setText("haha");
+		taskCount = new JTextField();
+		taskCount.setText("keine Tasks");
 
-		categoryModel = new DefaultTableModel();
-		categoryTable = new JTable(categoryModel);
+		categoryBoxModel = new DefaultComboBoxModel();
+		categoryBox = new JComboBox(categoryBoxModel);
+		String emptyCat = " ";
+		categoryBox.addItem(emptyCat);
+
+		prioBoxModel = new DefaultComboBoxModel();
+		prioBox = new JComboBox(prioBoxModel);
+		String prio = "prio1";
+		prioBox.addItem(prio);
+
+		categoryTableModel = new DefaultTableModel();
+		categoryTable = new JTable(categoryTableModel);
 		categoryTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		categoryModel.addColumn("Category");
+		categoryTableModel.addColumn("ID");
+		categoryTableModel.addColumn("Category");
 
 		TableColumn catCol = categoryTable.getColumnModel().getColumn(0);
+		catCol.setPreferredWidth(40);
+		catCol = categoryTable.getColumnModel().getColumn(1);
 		catCol.setPreferredWidth(200);
 
 		TableRowSorter<TableModel> catSorter = new TableRowSorter<TableModel>(
 				categoryTable.getModel());
 		categoryTable.setRowSorter(catSorter);
 
+		categoryTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = categoryTable.getSelectedRow();
+				int selectedID = (Integer) categoryTable.getValueAt(row, 0);
+				System.out.println(selectedID);
+			}
+		});
+
 		taskModel = new DefaultTableModel();
 		taskTable = new JTable(taskModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+		taskModel.addColumn("ID");
 		taskModel.addColumn("Task");
 		taskModel.addColumn("Description");
 		taskModel.addColumn("Category");
@@ -106,30 +139,38 @@ public class JtodoView extends JFrame implements Observer {
 		taskModel.addColumn("Status");
 
 		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
-		taskCol.setPreferredWidth(200);
+		taskCol.setPreferredWidth(40);
 		taskCol = taskTable.getColumnModel().getColumn(1);
 		taskCol.setPreferredWidth(200);
 		taskCol = taskTable.getColumnModel().getColumn(2);
-		taskCol.setPreferredWidth(80);
+		taskCol.setPreferredWidth(200);
 		taskCol = taskTable.getColumnModel().getColumn(3);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(4);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(5);
+		taskCol.setPreferredWidth(80);
+		taskCol = taskTable.getColumnModel().getColumn(6);
 		taskCol.setPreferredWidth(40);
 
 		TableRowSorter<TableModel> taskSorter = new TableRowSorter<TableModel>(
 				taskTable.getModel());
 		taskTable.setRowSorter(taskSorter);
 
-		statusField = new JTextField(20);
+		taskTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = taskTable.getSelectedRow();
+				int selectedID = (Integer) taskTable.getValueAt(row, 0);
+				System.out.println(selectedID);
+			}
+		});
+
 		JButton addTaskButton = new JButton("Task adden");
-		addTaskButton.setBounds(516, 5, 116, 29);
 
 		addTaskButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buttonAction(e);
+				addTaskButtonAction(e);
 			}
 		});
 
@@ -153,8 +194,9 @@ public class JtodoView extends JFrame implements Observer {
 		tabs.addTab("Sort / Filter", null, SortFilterPanel, null);
 		tabs.addTab("Archiv", null, ArchivPanel, null);
 
-		newTaskTextField = new JTextField(20);
-		newTaskTextField.setBounds(262, 4, 254, 28);
+		newTaskNameField = new JTextField(20);
+		newTaskDescriptionField = new JTextField(20);
+		statusField = new JTextField(20);
 
 		JPanel taskListCenterPanel = new JPanel();
 		JPanel taskListButtomPanel = new JPanel();
@@ -171,10 +213,24 @@ public class JtodoView extends JFrame implements Observer {
 		JPanel newTaskButtomPanel = new JPanel();
 		NewTaskPanel.add(newTaskCenterPanel, BorderLayout.CENTER);
 		NewTaskPanel.add(newTaskButtomPanel, BorderLayout.SOUTH);
-		newTaskCenterPanel.add(newTaskTextField);
+		newTaskCenterPanel.add(newTaskNameField);
+		newTaskCenterPanel.add(newTaskDescriptionField);
+		newTaskCenterPanel.add(categoryBox);
+		newTaskCenterPanel.add(prioBox);
 		newTaskButtomPanel.add(addTaskButton);
 
-		ArchivPanel.add(statusField);
+		JPanel archivCenterPanel = new JPanel();
+		JPanel archivButtomPanel = new JPanel();
+		ArchivPanel.add(archivCenterPanel, BorderLayout.CENTER);
+		ArchivPanel.add(archivButtomPanel, BorderLayout.SOUTH);
+
+		dateChooser = new JSpinnerDateEditor();
+		Date date = new Date();
+		dateChooser.setDate(date);
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+		archivCenterPanel.add(dateChooser);
+
+		archivButtomPanel.add(statusField);
 
 		JScrollPane scrollPaneTaskList = new JScrollPane(taskTable);
 		scrollPaneTaskList
@@ -202,35 +258,31 @@ public class JtodoView extends JFrame implements Observer {
 		this.model = model;
 	}
 
-	private void buttonAction(ActionEvent e) {
+	private void addTaskButtonAction(ActionEvent e) {
 		// Richtiger MVC ansatz, so müssen User Actions behandelt werden.
-		// controller.handleButtonAction();
-	}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dateChooser.getDate());
+		System.out.println(calendar.get(Calendar.YEAR));
+		System.out.println(calendar.get(Calendar.MONTH));
+		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
 
-	public void update() {
-		// Use controller to do this
-		Date now = new Date();
-		Date mod = new Date();
-		Task task = new Task(newTaskTextField.getText(), "description", 1, 1,
-				now, 1, mod);
-
-		DataHandler handler = new DataHandler(new DAOFactory());
-		handler.createTask(task);
-		statusField.setText("added the Task: " + this.getNewTask());
-
+		controller.addTaskButtonAction();
 	}
 
 	public String getNewTask() {
-		return newTaskTextField.getText();
+		return newTaskNameField.getText();
 	}
 
 	public void updateCategoryList(List<Category> categoryList) {
 
 		for (int i = 0; i < categoryList.size(); i++) {
 			{
+				int categoryID = categoryList.get(i).getId();
 				String categoryName = categoryList.get(i).getName();
 
-				categoryModel.addRow(new Object[] { categoryName });
+				categoryTableModel.addRow(new Object[] { categoryID,
+						categoryName });
+				categoryBoxModel.addElement(categoryName);
 			}
 		}
 	}
@@ -239,6 +291,7 @@ public class JtodoView extends JFrame implements Observer {
 
 		for (int i = 0; i < taskList.size(); i++) {
 			{
+				int taskID = taskList.get(i).getId();
 				String taskName = taskList.get(i).getName();
 				String taskDesc = taskList.get(i).getDescription();
 				int taskCat = taskList.get(i).getCategoryid();
@@ -246,9 +299,11 @@ public class JtodoView extends JFrame implements Observer {
 				Date taskDate = taskList.get(i).getDate();
 				int taskStat = taskList.get(i).getStatus();
 
-				taskModel.addRow(new Object[] { taskName, taskDesc, taskCat,
-						taskPrio, taskDate, taskStat });
+				taskModel.addRow(new Object[] { taskID, taskName, taskDesc,
+						taskCat, taskPrio, taskDate, taskStat });
 			}
+
+			taskCount.setText(taskList.size() + " Tasks");
 		}
 	}
 
@@ -268,9 +323,6 @@ public class JtodoView extends JFrame implements Observer {
 			if (listElement instanceof Task) {
 				List<Task> taskList = list;
 				updateTaskList(taskList);
-				System.out.println(taskCount.getText());
-				// String size = String.valueOf(taskList.size());
-				// taskCount.setText(size + "Tasks");
 			}
 
 			if (listElement instanceof Category) {
