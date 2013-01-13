@@ -9,6 +9,8 @@ public interface IGUIController {
 
 	public void getInitalData();
 
+	public void getCategory(int catID);
+
 	void addTaskButtonAction(String taskName, String taskDescription,
 			int catID, Date date);
 

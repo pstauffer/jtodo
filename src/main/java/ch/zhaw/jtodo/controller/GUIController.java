@@ -23,6 +23,10 @@ public class GUIController implements IGUIController {
 		model.addNewObserver(view);
 	}
 
+	public void getCategory(int catID) {
+		model.getTaskByCategory(catID);
+	}
+
 	public void getInitalData() {
 		model.getAllTasks();
 		model.getAllCategorys();
