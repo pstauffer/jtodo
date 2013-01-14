@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
@@ -440,6 +441,10 @@ public class JtodoView extends JFrame implements Observer {
 		jTableModel.addTaskList(taskList);
 		taskCount.setText(jTableModel.getRowCount() + " Tasks");
 	}
+	
+	public void updateArchivList(List<Task> archivList){
+		//add to archiv here
+	}
 
 	@Override
 	public void update(Observable arg0, Object element) {
@@ -456,7 +461,17 @@ public class JtodoView extends JFrame implements Observer {
 
 			if (listElement instanceof Task) {
 				List<Task> taskList = list;
-				updateTaskList(taskList);
+				List<Task> archivList = new ArrayList<Task>();
+				List<Task> todoList = new ArrayList<Task>();
+				for(Task task : taskList){
+					if(task.getStatus()==1){
+						archivList.add(task);
+					}else{
+						todoList.add(task);
+					}
+				}
+				updateTaskList(todoList);
+				updateArchivList(archivList);
 			}
 
 			if (listElement instanceof Category) {
