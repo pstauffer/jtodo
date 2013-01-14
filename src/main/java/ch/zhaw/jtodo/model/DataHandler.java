@@ -67,4 +67,17 @@ public class DataHandler extends Observable implements IDataHandler {
 		notify(taskList);
 	}
 
+	@Override
+	public void updateTask(Task task) {
+		
+		try {
+			daoFactory.getTaskDAO().update(task);
+		} catch (Exception e) {
+			//Exception will be thrown if task id not found
+		}
+		//notfiy all observers that a task has changed
+		this.getAllTasks();
+		
+	}
+
 }

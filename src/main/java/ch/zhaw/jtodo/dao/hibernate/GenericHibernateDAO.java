@@ -108,6 +108,18 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		 }
 	}
 	
+	public void update(T businessObject) throws Exception{
+		Transaction tx = null;
+		try{
+			tx= session.beginTransaction();
+			session.update(businessObject);
+			tx.commit();
+		}catch(Exception e){
+		     if (tx!=null) tx.rollback();
+		     throw e;
+		}
+	}
+	
 	/**
 	 * Löscht ein BusinessObject auf der DB, dafür wird die Hibernate SessionFactory
 	 * verwendet um eine neue Session zu erzeugen

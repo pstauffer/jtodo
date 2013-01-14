@@ -38,5 +38,7 @@ public interface IGenericDAO<T, ID extends Serializable> {
 	 * @param entity
 	 * @throws Exception
 	 */
-	void delete(T entity) throws Exception;
+	void delete(T businessObject) throws Exception;
+	
+	void update(T businessObject) throws Exception;
 }
