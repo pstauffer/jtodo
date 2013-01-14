@@ -17,6 +17,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -49,6 +50,11 @@ public class JtodoView extends JFrame implements Observer {
 	private JTextField sortTextField;
 	private JTextField newTaskNameField;
 	private JTextField newTaskDescriptionField;
+	private JLabel newTaskNameLabel;
+	private JLabel newTaskDescpritionLabel;
+	private JLabel newTaskCategoryLabel;
+	private JLabel newTaskPriorityLabel;
+	private JLabel newTaskDateLabel;
 	private JTable taskTable;
 	private JTable categoryTable;
 	private JTable priorityTable;
@@ -63,6 +69,10 @@ public class JtodoView extends JFrame implements Observer {
 	private JTextField taskCount;
 	private JSpinnerDateEditor dateChooser;
 	private JtodoTableModel jTableModel;
+	private JTabbedPane tabs;
+	private JPanel NewTaskPanel;
+	private JPanel TaskListPanel;
+	private JPanel AboutPanel;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
@@ -75,8 +85,10 @@ public class JtodoView extends JFrame implements Observer {
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
-		JMenu fileMenu = new JMenu("File");
+		JMenu fileMenu = new JMenu("Menu");
 		menuBar.add(fileMenu);
+		JMenuItem taskListMenuItem = new JMenuItem("Tasklist");
+		fileMenu.add(taskListMenuItem);
 		JMenuItem newTaskMenuItem = new JMenuItem("New Task");
 		fileMenu.add(newTaskMenuItem);
 		JMenuItem closeMenuItem = new JMenuItem("Close");
@@ -96,12 +108,40 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
+		newTaskMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabs.setSelectedComponent(NewTaskPanel);
+			}
+		});
+
+		taskListMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabs.setSelectedComponent(TaskListPanel);
+			}
+		});
+
 		JMenu aboutMenu = new JMenu("About");
 		menuBar.add(aboutMenu);
-		JMenuItem helpMenuItem = new JMenuItem("Help");
-		aboutMenu.add(helpMenuItem);
-		JMenuItem versionMenuItem = new JMenuItem("Version");
-		aboutMenu.add(versionMenuItem);
+		JMenuItem wikiMenuItem = new JMenuItem("Wiki");
+		aboutMenu.add(wikiMenuItem);
+		JMenuItem githubMenuItem = new JMenuItem("Github");
+		aboutMenu.add(githubMenuItem);
+
+		wikiMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabs.setSelectedComponent(AboutPanel);
+			}
+		});
+
+		githubMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabs.setSelectedComponent(AboutPanel);
+			}
+		});
 
 		taskCount = new JTextField();
 		taskCount.setText("keine Tasks");
@@ -133,11 +173,11 @@ public class JtodoView extends JFrame implements Observer {
 		categoryTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = categoryTable.getSelectedRow();
-				if (row == -1){
+				if (row == -1) {
 					return;
 				}
 				int count = priorityTable.getRowCount();
-				priorityTable.removeRowSelectionInterval(0, count-1);
+				priorityTable.removeRowSelectionInterval(0, count - 1);
 				if (row == 0) {
 					int selectedID = 0;
 					controller.getCategory(selectedID);
@@ -166,11 +206,11 @@ public class JtodoView extends JFrame implements Observer {
 		priorityTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = priorityTable.getSelectedRow();
-				if(row==-1){
+				if (row == -1) {
 					return;
 				}
 				int count = categoryTable.getRowCount();
-				categoryTable.removeRowSelectionInterval(0, count-1);
+				categoryTable.removeRowSelectionInterval(0, count - 1);
 				if (row == 0) {
 					int selectedID = 0;
 					controller.getPriority(selectedID);
@@ -191,7 +231,8 @@ public class JtodoView extends JFrame implements Observer {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				int row = e.getFirstRow();
-				if(e.getColumn()==5||e.getColumn()==0||e.getColumn()==1){
+				if (e.getColumn() == 5 || e.getColumn() == 0
+						|| e.getColumn() == 1) {
 					Task task = jTableModel.getValueAtRow(row);
 					controller.update(task);
 				}
@@ -242,28 +283,35 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
-		JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+		tabs = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(tabs, BorderLayout.CENTER);
 
-		JPanel TaskListPanel = new JPanel();
+		TaskListPanel = new JPanel();
 		TaskListPanel.setLayout(new BorderLayout(0, 0));
 
-		JPanel NewTaskPanel = new JPanel();
-		NewTaskPanel.setLayout(new BorderLayout(0, 0));
+		NewTaskPanel = new JPanel();
+		// absolut layout
+		NewTaskPanel.setLayout(null);
 
-		JPanel FilterPanel = new JPanel();
-		FilterPanel.setLayout(new BorderLayout(0, 0));
+		AboutPanel = new JPanel();
+		AboutPanel.setLayout(null);
 
 		JPanel ArchivPanel = new JPanel();
 		ArchivPanel.setLayout(new BorderLayout(0, 0));
 
-		tabs.addTab("Task Liste", null, TaskListPanel, null);
-		tabs.addTab("New Task", null, NewTaskPanel, null);
-		tabs.addTab("Filter", null, FilterPanel, null);
-		tabs.addTab("Archiv", null, ArchivPanel, null);
+		tabs.addTab("Task Liste", TaskListPanel);
+		tabs.addTab("New Task", NewTaskPanel);
+		tabs.addTab("Archiv", ArchivPanel);
+		tabs.addTab("About", AboutPanel);
 
 		newTaskNameField = new JTextField(20);
 		newTaskDescriptionField = new JTextField(20);
+		newTaskNameLabel = new JLabel("Title: ");
+		newTaskDescpritionLabel = new JLabel("Description: ");
+		newTaskCategoryLabel = new JLabel("Category: ");
+		newTaskPriorityLabel = new JLabel("Priority: ");
+		newTaskDateLabel = new JLabel("Date: ");
+
 		archivTextField = new JTextField(20);
 		archivTextField.setText("archivfield");
 
@@ -272,22 +320,41 @@ public class JtodoView extends JFrame implements Observer {
 		dateChooser.setDate(date);
 		dateChooser.setDateFormatString("dd/MM/yyyy");
 
-		JPanel sortPanel = new JPanel();
-		FilterPanel.add(sortPanel, BorderLayout.NORTH);
-		sortTextField = new JTextField(20);
-		sortTextField.setText("sortfield");
-		sortPanel.add(sortTextField);
+		JTextField gitTextField = new JTextField(20);
+		gitTextField.setText("https://github.com/barneyyy844/mdp_jtodo");
+		gitTextField.setBounds(50, 50, 500, 25);
+		JTextField wikiTextField = new JTextField(20);
+		wikiTextField.setText("https://github.com/barneyyy844/mdp_jtodo/wiki");
+		wikiTextField.setBounds(50, 100, 500, 25);
+		AboutPanel.add(gitTextField);
+		AboutPanel.add(wikiTextField);
 
-		JPanel newTaskCenterPanel = new JPanel();
-		JPanel newTaskButtomPanel = new JPanel();
-		NewTaskPanel.add(newTaskCenterPanel, BorderLayout.CENTER);
-		NewTaskPanel.add(newTaskButtomPanel, BorderLayout.SOUTH);
-		newTaskCenterPanel.add(newTaskNameField);
-		newTaskCenterPanel.add(newTaskDescriptionField);
-		newTaskCenterPanel.add(categoryBox);
-		newTaskCenterPanel.add(prioBox);
-		newTaskCenterPanel.add(dateChooser);
-		newTaskButtomPanel.add(addTaskButton);
+		// x, y, width, height
+		int firstX = 50;
+		int secondX = 160;
+		newTaskNameLabel.setBounds(firstX, 30, 100, 25);
+		newTaskDescpritionLabel.setBounds(firstX, 60, 100, 25);
+		newTaskCategoryLabel.setBounds(firstX, 90, 100, 25);
+		newTaskPriorityLabel.setBounds(firstX, 120, 100, 25);
+		newTaskDateLabel.setBounds(firstX, 150, 100, 25);
+		newTaskNameField.setBounds(secondX, 30, 200, 25);
+		newTaskDescriptionField.setBounds(secondX, 60, 200, 25);
+		categoryBox.setBounds(secondX, 90, 100, 25);
+		prioBox.setBounds(secondX, 120, 100, 25);
+		dateChooser.setBounds(secondX, 150, 100, 25);
+		addTaskButton.setBounds(100, 200, 100, 25);
+
+		NewTaskPanel.add(newTaskNameLabel);
+		NewTaskPanel.add(newTaskDescpritionLabel);
+		NewTaskPanel.add(newTaskCategoryLabel);
+		NewTaskPanel.add(newTaskPriorityLabel);
+		NewTaskPanel.add(newTaskDateLabel);
+		NewTaskPanel.add(newTaskNameField);
+		NewTaskPanel.add(newTaskDescriptionField);
+		NewTaskPanel.add(categoryBox);
+		NewTaskPanel.add(prioBox);
+		NewTaskPanel.add(dateChooser);
+		NewTaskPanel.add(addTaskButton);
 
 		JPanel archivCenterPanel = new JPanel();
 		ArchivPanel.add(archivCenterPanel, BorderLayout.CENTER);
