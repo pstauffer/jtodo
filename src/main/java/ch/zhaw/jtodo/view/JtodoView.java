@@ -280,6 +280,15 @@ public class JtodoView extends JFrame implements Observer {
 				task.setModifiydate(new Date());
 				task.setStatus(0);
 				controller.addTask(task);
+				clearTaskComponents();
+			}
+
+			private void clearTaskComponents() {
+				newTaskNameField.setText(null);
+				newTaskDescriptionField.setText(null);
+				categoryBox.setSelectedIndex(0);
+				prioBox.setSelectedIndex(0);
+				dateChooser.setDate(new Date());
 			}
 		});
 
@@ -316,8 +325,7 @@ public class JtodoView extends JFrame implements Observer {
 		archivTextField.setText("archivfield");
 
 		dateChooser = new JSpinnerDateEditor();
-		Date date = new Date();
-		dateChooser.setDate(date);
+		dateChooser.setDate(new Date());
 		dateChooser.setDateFormatString("dd/MM/yyyy");
 
 		JTextField gitTextField = new JTextField(20);
@@ -339,9 +347,9 @@ public class JtodoView extends JFrame implements Observer {
 		newTaskDateLabel.setBounds(firstX, 150, 100, 25);
 		newTaskNameField.setBounds(secondX, 30, 200, 25);
 		newTaskDescriptionField.setBounds(secondX, 60, 200, 25);
-		categoryBox.setBounds(secondX, 90, 100, 25);
-		prioBox.setBounds(secondX, 120, 100, 25);
-		dateChooser.setBounds(secondX, 150, 100, 25);
+		categoryBox.setBounds(secondX, 90, 120, 25);
+		prioBox.setBounds(secondX, 120, 120, 25);
+		dateChooser.setBounds(secondX, 150, 120, 25);
 		addTaskButton.setBounds(100, 200, 100, 25);
 
 		NewTaskPanel.add(newTaskNameLabel);
