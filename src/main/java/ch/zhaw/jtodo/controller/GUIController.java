@@ -48,16 +48,13 @@ public class GUIController implements IGUIController {
 
 	@Override
 	public void addTask(Task task) {
-
-		DataHandler handler = new DataHandler(new DAOFactory());
-		handler.createTask(task);
+		model.createTask(task);
 		// notify
 		model.getAllTasks();
 	}
 
 	@Override
 	public void update(Task task) {
-		DataHandler handler = new DataHandler(new DAOFactory());
-		handler.updateTask(task);
+		model.updateTask(task);
 	}
 }

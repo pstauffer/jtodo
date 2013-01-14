@@ -133,6 +133,11 @@ public class JtodoView extends JFrame implements Observer {
 		categoryTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = categoryTable.getSelectedRow();
+				if (row == -1){
+					return;
+				}
+				int count = priorityTable.getRowCount();
+				priorityTable.removeRowSelectionInterval(0, count-1);
 				if (row == 0) {
 					int selectedID = 0;
 					controller.getCategory(selectedID);
@@ -161,6 +166,11 @@ public class JtodoView extends JFrame implements Observer {
 		priorityTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = priorityTable.getSelectedRow();
+				if(row==-1){
+					return;
+				}
+				int count = categoryTable.getRowCount();
+				categoryTable.removeRowSelectionInterval(0, count-1);
 				if (row == 0) {
 					int selectedID = 0;
 					controller.getPriority(selectedID);
@@ -181,8 +191,10 @@ public class JtodoView extends JFrame implements Observer {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				int row = e.getFirstRow();
-				Task task = jTableModel.getValueAtRow(row);
-				controller.update(task);
+				if(e.getColumn()==5||e.getColumn()==0||e.getColumn()==1){
+					Task task = jTableModel.getValueAtRow(row);
+					controller.update(task);
+				}
 			}
 		});
 
