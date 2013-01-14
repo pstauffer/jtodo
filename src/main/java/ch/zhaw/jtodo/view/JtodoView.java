@@ -124,7 +124,7 @@ public class JtodoView extends JFrame implements Observer {
 
 		JMenu aboutMenu = new JMenu("About");
 		menuBar.add(aboutMenu);
-		JMenuItem wikiMenuItem = new JMenuItem("Wiki Page");
+		JMenuItem wikiMenuItem = new JMenuItem("Wiki");
 		aboutMenu.add(wikiMenuItem);
 		JMenuItem githubMenuItem = new JMenuItem("Github");
 		aboutMenu.add(githubMenuItem);
