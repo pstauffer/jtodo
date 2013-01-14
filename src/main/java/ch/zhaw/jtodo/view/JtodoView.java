@@ -27,6 +27,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -142,6 +144,22 @@ public class JtodoView extends JFrame implements Observer {
 		jTableModel = new JtodoTableModel();
 		taskTable = new JTable(jTableModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		jTableModel.addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				int row = e.getFirstRow();
+				int column = e.getColumn();
+				// JtodoTableModel model = (JtodoTableModel) e.getSource();
+				// String columnName = jTableModel.getColumnName(column);
+				// Object data = model.getValueAt(row, column);
+
+				System.out.println("colum changed: " + column);
+				System.out.println("row changed: " + row);
+
+			}
+		});
 
 		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
 		taskCol.setPreferredWidth(150);
