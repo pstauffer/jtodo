@@ -103,6 +103,19 @@ public class JtodoTableModel extends AbstractTableModel {
 			this.categoryList.put(cat.getId(), cat.getName());
 		}
 	}
+	
+	public void setValueAt(Object object,int row,int col){
+		if(col == 5){
+			Task task = (Task) this.dataList.get(row);
+			Boolean bool = (Boolean)object;
+			if(bool){
+				task.setStatus(1);
+			}else{
+				task.setStatus(0);
+			}
+			fireTableDataChanged();
+		}
+	}
 
 	public boolean isCellEditable(int row, int col) {
 		// only the status column must be editable

@@ -149,14 +149,14 @@ public class JtodoView extends JFrame implements Observer {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				int row = e.getFirstRow();
-				int column = e.getColumn();
+				//int row = e.getFirstRow();
+				//int column = e.getColumn();
 				// JtodoTableModel model = (JtodoTableModel) e.getSource();
 				// String columnName = jTableModel.getColumnName(column);
 				// Object data = model.getValueAt(row, column);
 
-				System.out.println("colum changed: " + column);
-				System.out.println("row changed: " + row);
+				//System.out.println("colum changed: " + column);
+				//System.out.println("row changed: " + row);
 
 			}
 		});
@@ -173,7 +173,7 @@ public class JtodoView extends JFrame implements Observer {
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(5);
 		taskCol.setPreferredWidth(40);
-
+		
 		TableRowSorter<TableModel> taskSorter = new TableRowSorter<TableModel>(
 				taskTable.getModel());
 		taskTable.setRowSorter(taskSorter);
