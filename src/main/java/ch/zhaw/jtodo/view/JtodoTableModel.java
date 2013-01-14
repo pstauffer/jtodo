@@ -113,8 +113,12 @@ public class JtodoTableModel extends AbstractTableModel {
 			} else {
 				task.setStatus(0);
 			}
-			fireTableRowsUpdated(row, col);
+			fireTableCellUpdated(row, col);
 		}
+	}
+	
+	public Task getValueAtRow(int row){
+		return (Task) this.dataList.get(row);
 	}
 
 	public boolean isCellEditable(int row, int col) {

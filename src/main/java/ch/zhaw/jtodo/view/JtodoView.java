@@ -149,10 +149,12 @@ public class JtodoView extends JFrame implements Observer {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
+				
 				int row = e.getFirstRow();
-				// Object data = model.getValueAt(row, column);
-
-				System.out.println("row changed: " + row);
+				Task data = jTableModel.getValueAtRow(row);
+				
+				//controller.updateTask(task);
+				//System.out.println("row changed: " + row);
 
 			}
 		});
