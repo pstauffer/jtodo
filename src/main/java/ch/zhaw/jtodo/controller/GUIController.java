@@ -24,7 +24,11 @@ public class GUIController implements IGUIController {
 	}
 
 	public void getCategory(int catID) {
-		model.getTaskByCategory(catID);
+		if (catID == 0) {
+			model.getAllTasks();
+		} else {
+			model.getTaskByCategory(catID);
+		}
 	}
 
 	public void getInitalData() {
@@ -37,7 +41,7 @@ public class GUIController implements IGUIController {
 			int catID, Date date) {
 		Date mod = new Date();
 
-		Task task = new Task(taskName, taskDescription, catID, 1, date, 1, mod);
+		Task task = new Task(taskName, taskDescription, catID, 1, date, 0, mod);
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 		handler.createTask(task);
