@@ -524,12 +524,14 @@ public class JtodoView extends JFrame implements Observer {
 			if (listElement instanceof Category) {
 				List<Category> categoryList = list;
 				this.jtodoTableModelTask.setCategoryList(list);
+				this.jtodoTableModelArchiv.setCategoryList(list);
 				updateCategoryList(categoryList);
 			}
 
 			if (listElement instanceof Priority) {
 				List<Priority> priorityList = list;
 				this.jtodoTableModelTask.setPriorityList(list);
+				this.jtodoTableModelArchiv.setPriorityList(list);
 				updatePriorityList(priorityList);
 			}
 		}
