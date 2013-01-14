@@ -1,7 +1,8 @@
 package ch.zhaw.jtodo.controller;
 
-import java.util.Date;
 import java.util.Observer;
+
+import ch.zhaw.jtodo.domain.Task;
 
 public interface IGUIController {
 
@@ -11,8 +12,11 @@ public interface IGUIController {
 
 	public void getCategory(int catID);
 
-	void addTaskButtonAction(String taskName, String taskDescription,
-			int catID, Date date);
+	void addTask(Task task);
+
+	void update(Task task);
+
+	public void getPriority(int selectedID);
 
 	// Implement methods used in gui here
 

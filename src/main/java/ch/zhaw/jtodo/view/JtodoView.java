@@ -37,6 +37,7 @@ import javax.swing.table.TableRowSorter;
 import ch.zhaw.jtodo.controller.GUIController;
 import ch.zhaw.jtodo.controller.IGUIController;
 import ch.zhaw.jtodo.domain.Category;
+import ch.zhaw.jtodo.domain.Priority;
 import ch.zhaw.jtodo.domain.Task;
 import ch.zhaw.jtodo.model.IDataHandler;
 
@@ -50,11 +51,13 @@ public class JtodoView extends JFrame implements Observer {
 	private JTextField newTaskDescriptionField;
 	private JTable taskTable;
 	private JTable categoryTable;
+	private JTable priorityTable;
 	private JComboBox categoryBox;
 	private JComboBox prioBox;
 	private IDataHandler model;
 	private IGUIController controller;
 	private DefaultTableModel categoryTableModel;
+	private DefaultTableModel priorityTableModel;
 	private DefaultComboBoxModel categoryBoxModel;
 	private DefaultComboBoxModel prioBoxModel;
 	private JTextField taskCount;
@@ -110,8 +113,8 @@ public class JtodoView extends JFrame implements Observer {
 
 		prioBoxModel = new DefaultComboBoxModel();
 		prioBox = new JComboBox(prioBoxModel);
-		String prio = "prio1";
-		prioBox.addItem(prio);
+		String emptyPrio = " ";
+		prioBox.addItem(emptyPrio);
 
 		categoryTableModel = new DefaultTableModel();
 		categoryTable = new JTable(categoryTableModel);
@@ -141,6 +144,34 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
+		priorityTableModel = new DefaultTableModel();
+		priorityTable = new JTable(priorityTableModel);
+		priorityTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		priorityTableModel.addColumn("Priority");
+		priorityTableModel.addRow(new Object[] { "Alle" });
+
+		TableColumn prioCol = priorityTable.getColumnModel().getColumn(0);
+		prioCol.setPreferredWidth(100);
+
+		TableRowSorter<TableModel> prioSorter = new TableRowSorter<TableModel>(
+				priorityTable.getModel());
+		priorityTable.setRowSorter(prioSorter);
+
+		priorityTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = priorityTable.getSelectedRow();
+				if (row == 0) {
+					int selectedID = 0;
+					controller.getPriority(selectedID);
+				} else {
+					Priority prio = (Priority) priorityTable.getValueAt(row, 0);
+					int selectedID = prio.getId();
+					controller.getPriority(selectedID);
+				}
+			}
+		});
+
 		jTableModel = new JtodoTableModel();
 		taskTable = new JTable(jTableModel);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -149,13 +180,9 @@ public class JtodoView extends JFrame implements Observer {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				
 				int row = e.getFirstRow();
-				Task data = jTableModel.getValueAtRow(row);
-				
-				//controller.updateTask(task);
-				//System.out.println("row changed: " + row);
-
+				Task task = jTableModel.getValueAtRow(row);
+				controller.update(task);
 			}
 		});
 
@@ -166,9 +193,9 @@ public class JtodoView extends JFrame implements Observer {
 		taskCol = taskTable.getColumnModel().getColumn(2);
 		taskCol.setPreferredWidth(80);
 		taskCol = taskTable.getColumnModel().getColumn(3);
-		taskCol.setPreferredWidth(80);
+		taskCol.setPreferredWidth(60);
 		taskCol = taskTable.getColumnModel().getColumn(4);
-		taskCol.setPreferredWidth(80);
+		taskCol.setPreferredWidth(100);
 		taskCol = taskTable.getColumnModel().getColumn(5);
 		taskCol.setPreferredWidth(40);
 
@@ -187,9 +214,19 @@ public class JtodoView extends JFrame implements Observer {
 				String taskName = newTaskNameField.getText();
 				String taskDescription = newTaskDescriptionField.getText();
 				Category cat = (Category) categoryBox.getSelectedItem();
+				Priority prio = (Priority) prioBox.getSelectedItem();
 				int catID = cat.getId();
-				controller.addTaskButtonAction(taskName, taskDescription,
-						catID, date);
+				int prioID = prio.getId();
+
+				Task task = new Task();
+				task.setName(taskName);
+				task.setDescription(taskDescription);
+				task.setCategoryid(catID);
+				task.setDate(date);
+				task.setPriorityid(prioID);
+				task.setModifiydate(new Date());
+				task.setStatus(0);
+				controller.addTask(task);
 			}
 		});
 
@@ -241,28 +278,36 @@ public class JtodoView extends JFrame implements Observer {
 		newTaskButtomPanel.add(addTaskButton);
 
 		JPanel archivCenterPanel = new JPanel();
-		JPanel archivButtomPanel = new JPanel();
 		ArchivPanel.add(archivCenterPanel, BorderLayout.CENTER);
-		ArchivPanel.add(archivButtomPanel, BorderLayout.SOUTH);
-
-		archivButtomPanel.add(archivTextField);
+		archivCenterPanel.add(archivTextField);
 
 		JPanel outTaskListPanel = new JPanel(new BorderLayout());
 
-		JPanel TaskListLeftPanel = new JPanel();
+		JPanel TaskListLeftPanel = new JPanel(new BorderLayout());
 		JPanel TaskListCenterPanel = new JPanel();
 		JPanel TaskListButtomPanel = new JPanel();
 		outTaskListPanel.add(TaskListLeftPanel, BorderLayout.WEST);
 		outTaskListPanel.add(TaskListCenterPanel, BorderLayout.CENTER);
 		outTaskListPanel.add(TaskListButtomPanel, BorderLayout.SOUTH);
 
+		JPanel topTaskListLeftPanel = new JPanel();
+		JPanel buttomTaskListLeftPanel = new JPanel();
+		TaskListLeftPanel.add(topTaskListLeftPanel, BorderLayout.NORTH);
+		TaskListLeftPanel.add(buttomTaskListLeftPanel, BorderLayout.SOUTH);
+
 		TaskListButtomPanel.add(taskCount);
 
 		JScrollPane scrollPaneCatList = new JScrollPane(categoryTable);
 		scrollPaneCatList
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneCatList.setPreferredSize(new Dimension(80, 200));
-		TaskListLeftPanel.add(scrollPaneCatList);
+		scrollPaneCatList.setPreferredSize(new Dimension(80, 100));
+		topTaskListLeftPanel.add(scrollPaneCatList);
+
+		JScrollPane scrollPanePrioList = new JScrollPane(priorityTable);
+		scrollPanePrioList
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPanePrioList.setPreferredSize(new Dimension(80, 100));
+		buttomTaskListLeftPanel.add(scrollPanePrioList);
 
 		JScrollPane scrollPaneTaskList = new JScrollPane(taskTable);
 		scrollPaneTaskList
@@ -291,6 +336,14 @@ public class JtodoView extends JFrame implements Observer {
 		for (Category category : categoryList) {
 			categoryTableModel.addRow(new Object[] { category });
 			categoryBoxModel.addElement(category);
+		}
+	}
+
+	public void updatePriorityList(List<Priority> priorityList) {
+
+		for (Priority priority : priorityList) {
+			priorityTableModel.addRow(new Object[] { priority });
+			prioBoxModel.addElement(priority);
 		}
 	}
 
@@ -323,6 +376,12 @@ public class JtodoView extends JFrame implements Observer {
 				List<Category> categoryList = list;
 				this.jTableModel.setCategoryList(list);
 				updateCategoryList(categoryList);
+			}
+
+			if (listElement instanceof Priority) {
+				List<Priority> priorityList = list;
+				this.jTableModel.setPriorityList(list);
+				updatePriorityList(priorityList);
 			}
 		}
 	}

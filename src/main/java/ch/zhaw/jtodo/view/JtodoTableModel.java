@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 import ch.zhaw.jtodo.domain.Category;
+import ch.zhaw.jtodo.domain.Priority;
 import ch.zhaw.jtodo.domain.Task;
 
 public class JtodoTableModel extends AbstractTableModel {
@@ -17,6 +18,7 @@ public class JtodoTableModel extends AbstractTableModel {
 
 	private ArrayList dataList = new ArrayList();
 	private Map categoryList = new HashMap<Integer, String>();
+	private Map priorityList = new HashMap<Integer, String>();
 
 	public JtodoTableModel() {
 
@@ -59,7 +61,13 @@ public class JtodoTableModel extends AbstractTableModel {
 			}
 			return category;
 		case 3:
-			return String.valueOf(task.getPriorityid());
+			String priority = " ";
+			try {
+				priority = (String) this.priorityList.get(task.getPriorityid());
+			} catch (Exception e) {
+				priority = " ";
+			}
+			return priority;
 		case 4:
 			return task.getDate().toString();
 		case 5:
@@ -104,6 +112,13 @@ public class JtodoTableModel extends AbstractTableModel {
 		}
 	}
 
+	public void setPriorityList(List<Priority> prioritys) {
+		this.priorityList.clear();
+		for (Priority prio : prioritys) {
+			this.priorityList.put(prio.getId(), prio.getName());
+		}
+	}
+
 	public void setValueAt(Object object, int row, int col) {
 		if (col == 5) {
 			Task task = (Task) this.dataList.get(row);
@@ -115,18 +130,31 @@ public class JtodoTableModel extends AbstractTableModel {
 			}
 			fireTableCellUpdated(row, col);
 		}
+		if (col == 0) {
+			Task task = (Task) this.dataList.get(row);
+			String newTaskName = (String) object;
+			task.setName(newTaskName);
+			fireTableCellUpdated(row, col);
+		}
+		if (col == 1) {
+			Task task = (Task) this.dataList.get(row);
+			String newTaskDescription = (String) object;
+			task.setDescription(newTaskDescription);
+			fireTableCellUpdated(row, col);
+		}
 	}
-	
-	public Task getValueAtRow(int row){
+
+	public Task getValueAtRow(int row) {
 		return (Task) this.dataList.get(row);
 	}
 
 	public boolean isCellEditable(int row, int col) {
 		// only the status column must be editable
-		if (col == 5) {
+		if (col == 5 || col == 0 || col == 1) {
 			return true;
 		} else {
 			return false;
 		}
 	}
+
 }

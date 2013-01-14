@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import ch.zhaw.jtodo.dao.IDAOFactory;
 import ch.zhaw.jtodo.domain.Category;
+import ch.zhaw.jtodo.domain.Priority;
 import ch.zhaw.jtodo.domain.Task;
 
 public class DataHandler extends Observable implements IDataHandler {
@@ -39,9 +40,16 @@ public class DataHandler extends Observable implements IDataHandler {
 		this.notifyObservers(element);
 	}
 
+	@Override
 	public void getAllCategorys() {
 		List<Category> categoryList = daoFactory.getCategoryDAO().findAll();
 		notify(categoryList);
+	}
+
+	@Override
+	public void getAllPrioritys() {
+		List<Priority> priorityList = daoFactory.getPriorityDAO().findAll();
+		notify(priorityList);
 	}
 
 	@Override
@@ -68,16 +76,28 @@ public class DataHandler extends Observable implements IDataHandler {
 	}
 
 	@Override
+	public void getTaskByPriority(int id) {
+		Priority prio = daoFactory.getPriorityDAO().findById(id);
+
+		if (prio == null) {
+			return;
+		}
+
+		List<Task> taskList = daoFactory.getTaskDAO().getTaskByPriority(prio);
+		notify(taskList);
+	}
+
+	@Override
 	public void updateTask(Task task) {
-		
+
 		try {
 			daoFactory.getTaskDAO().update(task);
 		} catch (Exception e) {
-			//Exception will be thrown if task id not found
+			// Exception will be thrown if task id not found
 		}
-		//notfiy all observers that a task has changed
+		// notfiy all observers that a task has changed
 		this.getAllTasks();
-		
+
 	}
 
 }

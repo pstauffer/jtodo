@@ -1,6 +1,5 @@
 package ch.zhaw.jtodo.controller;
 
-import java.util.Date;
 import java.util.Observer;
 
 import ch.zhaw.jtodo.dao.DAOFactory;
@@ -23,6 +22,7 @@ public class GUIController implements IGUIController {
 		model.addNewObserver(view);
 	}
 
+	@Override
 	public void getCategory(int catID) {
 		if (catID == 0) {
 			model.getAllTasks();
@@ -31,17 +31,23 @@ public class GUIController implements IGUIController {
 		}
 	}
 
+	@Override
+	public void getPriority(int prioID) {
+		if (prioID == 0) {
+			model.getAllTasks();
+		} else {
+			model.getTaskByPriority(prioID);
+		}
+	}
+
 	public void getInitalData() {
+		model.getAllPrioritys();
 		model.getAllCategorys();
 		model.getAllTasks();
 	}
 
 	@Override
-	public void addTaskButtonAction(String taskName, String taskDescription,
-			int catID, Date date) {
-		Date mod = new Date();
-
-		Task task = new Task(taskName, taskDescription, catID, 1, date, 0, mod);
+	public void addTask(Task task) {
 
 		DataHandler handler = new DataHandler(new DAOFactory());
 		handler.createTask(task);
@@ -49,4 +55,9 @@ public class GUIController implements IGUIController {
 		model.getAllTasks();
 	}
 
+	@Override
+	public void update(Task task) {
+		DataHandler handler = new DataHandler(new DAOFactory());
+		handler.updateTask(task);
+	}
 }
