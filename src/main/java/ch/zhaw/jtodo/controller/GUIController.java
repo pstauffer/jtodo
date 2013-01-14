@@ -28,8 +28,8 @@ public class GUIController implements IGUIController {
 	}
 
 	public void getInitalData() {
-		model.getAllTasks();
 		model.getAllCategorys();
+		model.getAllTasks();
 	}
 
 	@Override

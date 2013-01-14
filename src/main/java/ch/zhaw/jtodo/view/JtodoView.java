@@ -310,6 +310,7 @@ public class JtodoView extends JFrame implements Observer {
 
 			if (listElement instanceof Category) {
 				List<Category> categoryList = list;
+				this.jtablemodel.setCategoryList(list);
 				updateCategoryList(categoryList);
 			}
 		}

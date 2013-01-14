@@ -1,10 +1,13 @@
 package ch.zhaw.jtodo.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
+import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Task;
 
 public class JtodoTableModel extends AbstractTableModel {
@@ -12,10 +15,11 @@ public class JtodoTableModel extends AbstractTableModel {
 	private String[] columnNames = { "Task", "Description", "Category",
 			"Priority", "Date", "Status" };
 
-	private ArrayList datalist = new ArrayList();
+	private ArrayList dataList = new ArrayList();
+	private Map categoryList = new HashMap<Integer,String>();
 
 	public JtodoTableModel() {
-
+		
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class JtodoTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return datalist.size();
+		return dataList.size();
 	}
 	
 	public String getColumnName(int col) {
@@ -39,7 +43,7 @@ public class JtodoTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Task task = (Task) datalist.get(row);
+		Task task = (Task) dataList.get(row);
 		
 		   switch (col) {
 		    case 0:
@@ -47,7 +51,13 @@ public class JtodoTableModel extends AbstractTableModel {
 		    case 1:
 		     return task.getDescription();
 		    case 2:
-		     return String.valueOf(task.getCategoryid());
+		    	String category = " ";
+		    	try{
+		    		category = (String) this.categoryList.get(task.getCategoryid());
+		    	}catch(Exception e){
+		    		category = " ";
+		    	}
+		    	return category;
 		    case 3:
 		     return String.valueOf(task.getPriorityid());
 		    case 4:
@@ -64,27 +74,33 @@ public class JtodoTableModel extends AbstractTableModel {
 	}
 
 	public Task getWidgetAt(int row) {
-		return (Task) datalist.get(row);
+		return (Task) dataList.get(row);
 	}
 
 	public void addTask(Task task) {
-		datalist.add(task);
+		dataList.add(task);
 		fireTableDataChanged();
 	}
 
 	public void addTaskList(List l) {
-		datalist.addAll(l);
+		dataList.addAll(l);
 		fireTableDataChanged();
 	}
 	
 	public Task removeTaskAt(int row) {
-		   Task task = (Task)datalist.remove(row);
+		   Task task = (Task)dataList.remove(row);
 		   fireTableDataChanged();
 		   return task;
 	}
 	
 	public void removeAllTasks(){
-		this.datalist.clear();
+		this.dataList.clear();
 	}
 
+	public void setCategoryList(List<Category> categorys){
+		this.categoryList.clear();
+		for(Category cat : categorys){
+			this.categoryList.put(cat.getId(), cat.getName());
+		}
+	}
 }
