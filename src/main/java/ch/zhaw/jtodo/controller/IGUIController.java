@@ -4,6 +4,12 @@ import java.util.Observer;
 
 import ch.zhaw.jtodo.domain.Task;
 
+/**
+ * 
+ * MVC => Controller Interface für die Controller Klasse GUIController
+ * 
+ * @author pascal
+ */
 public interface IGUIController {
 
 	public void addObserver(Observer view);

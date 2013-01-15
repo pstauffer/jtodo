@@ -11,6 +11,12 @@ import ch.zhaw.jtodo.domain.Category;
 import ch.zhaw.jtodo.domain.Priority;
 import ch.zhaw.jtodo.domain.Task;
 
+/**
+ * 
+ * Klasse für das eigene TableModel, erweitert das AbsstractTableModel
+ * 
+ * @author yannik
+ */
 public class JtodoTableModel extends AbstractTableModel {
 
 	private String[] columnNames = { "Task", "Description", "Category",
@@ -24,25 +30,39 @@ public class JtodoTableModel extends AbstractTableModel {
 
 	}
 
+	/**
+	 * gibt die Anzahl der Spalten zurück
+	 */
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return columnNames.length;
 	}
 
+	/**
+	 * gibt die Anzahl der Zeilen zurück
+	 */
 	@Override
 	public int getRowCount() {
 		return dataList.size();
 	}
 
+	/**
+	 * gibt den Spaltennamen einer Spalte zurück
+	 */
 	public String getColumnName(int col) {
 		return columnNames[col];
 	}
 
+	/**
+	 * gibt die Klasse einer Spalte zurück (task,priority,category)
+	 */
 	public Class getColumnClass(int c) {
 		return getValueAt(0, c).getClass();
 	}
 
+	/**
+	 * gibt das Object der Tabelle anhand der Spalte und Zeile zurück
+	 */
 	@Override
 	public Object getValueAt(int row, int col) {
 		Task task = (Task) dataList.get(row);
@@ -85,26 +105,41 @@ public class JtodoTableModel extends AbstractTableModel {
 		return (Task) dataList.get(row);
 	}
 
+	/**
+	 * fügt einen neuen Task in die Taskliste ein
+	 */
 	public void addTask(Task task) {
 		dataList.add(task);
 		fireTableDataChanged();
 	}
 
+	/**
+	 * fügt die Taskliste in die Tabelle ein
+	 */
 	public void addTaskList(List l) {
 		dataList.addAll(l);
 		fireTableDataChanged();
 	}
 
+	/**
+	 * löscht einen Task aus der Tabellle
+	 */
 	public Task removeTaskAt(int row) {
 		Task task = (Task) dataList.remove(row);
 		fireTableDataChanged();
 		return task;
 	}
 
+	/**
+	 * löscht alle Task aus der Tabellle
+	 */
 	public void removeAllTasks() {
 		this.dataList.clear();
 	}
 
+	/**
+	 * setzt die categoryList
+	 */
 	public void setCategoryList(List<Category> categorys) {
 		this.categoryList.clear();
 		for (Category cat : categorys) {
@@ -112,6 +147,9 @@ public class JtodoTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * setzt die priorityList
+	 */
 	public void setPriorityList(List<Priority> prioritys) {
 		this.priorityList.clear();
 		for (Priority prio : prioritys) {
@@ -119,6 +157,9 @@ public class JtodoTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * setzt ein Object an eine Zeile und Spalte in der Tabelle
+	 */
 	public void setValueAt(Object object, int row, int col) {
 		if (col == 5) {
 			Task task = (Task) this.dataList.get(row);
@@ -144,13 +185,19 @@ public class JtodoTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * gibt mir das Task-Object einer Zeile zurück
+	 */
 	public Task getValueAtRow(int row) {
 		return (Task) this.dataList.get(row);
 	}
 
+	/**
+	 * definiert, welche Spalten editierbar sind
+	 */
 	public boolean isCellEditable(int row, int col) {
-		// only the status column must be editable
-		if (col == 5 || col == 0 || col == 1) {
+		// only the name(0),description(1),status(5) column must be editable
+		if (col == 0 || col == 1 || col == 5) {
 			return true;
 		} else {
 			return false;

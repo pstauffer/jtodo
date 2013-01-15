@@ -4,6 +4,12 @@ import java.util.Observer;
 
 import ch.zhaw.jtodo.domain.Task;
 
+/**
+ * 
+ * MVC => Model Interface für die Model Klasse DataHandler
+ * 
+ * @author pascal
+ */
 public interface IDataHandler {
 
 	public void createTask(Task task);

@@ -45,6 +45,13 @@ import ch.zhaw.jtodo.model.IDataHandler;
 
 import com.toedter.calendar.JSpinnerDateEditor;
 
+/**
+ * 
+ * MVC => View Klasse für die Anzeige des GUIs implementiert mit dem Observer
+ * Pattern
+ * 
+ * @author pascal
+ */
 public class JtodoView extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private JTextField newTaskNameField;
@@ -96,6 +103,17 @@ public class JtodoView extends JFrame implements Observer {
 		JMenuItem closeMenuItem = new JMenuItem("Close");
 		fileMenu.add(closeMenuItem);
 
+		JMenu aboutMenu = new JMenu("About");
+		menuBar.add(aboutMenu);
+		JMenuItem wikiMenuItem = new JMenuItem("Wiki");
+		aboutMenu.add(wikiMenuItem);
+		JMenuItem githubMenuItem = new JMenuItem("Github");
+		aboutMenu.add(githubMenuItem);
+
+		/**
+		 * ActionListener um die Close Option abzufangen und eine
+		 * Confirm-Abfrage anzuzeigen
+		 */
 		closeMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -110,6 +128,10 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
+		/**
+		 * ActionListener um die newTask Option abzufangen und das Tab zu
+		 * wechseln
+		 */
 		newTaskMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -117,6 +139,10 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
+		/**
+		 * ActionListener um die taskList Option abzufangen und das Tab zu
+		 * wechseln
+		 */
 		taskListMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -124,13 +150,9 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
-		JMenu aboutMenu = new JMenu("About");
-		menuBar.add(aboutMenu);
-		JMenuItem wikiMenuItem = new JMenuItem("Wiki");
-		aboutMenu.add(wikiMenuItem);
-		JMenuItem githubMenuItem = new JMenuItem("Github");
-		aboutMenu.add(githubMenuItem);
-
+		/**
+		 * ActionListener um die wiki Option abzufangen und das Tab zu wechseln
+		 */
 		wikiMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -138,6 +160,10 @@ public class JtodoView extends JFrame implements Observer {
 			}
 		});
 
+		/**
+		 * ActionListener um die github Option abzufangen und das Tab zu
+		 * wechseln
+		 */
 		githubMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -175,25 +201,6 @@ public class JtodoView extends JFrame implements Observer {
 				categoryTable.getModel());
 		categoryTable.setRowSorter(catSorter);
 
-		categoryTable.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int row = categoryTable.getSelectedRow();
-				if (row == -1) {
-					return;
-				}
-				int count = priorityTable.getRowCount();
-				priorityTable.removeRowSelectionInterval(0, count - 1);
-				if (row == 0) {
-					int selectedID = 0;
-					controller.getCategory(selectedID);
-				} else {
-					Category cat = (Category) categoryTable.getValueAt(row, 0);
-					int selectedID = cat.getId();
-					controller.getCategory(selectedID);
-				}
-			}
-		});
-
 		priorityTableModel = new DefaultTableModel();
 		priorityTable = new JTable(priorityTableModel);
 		priorityTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -208,41 +215,9 @@ public class JtodoView extends JFrame implements Observer {
 				priorityTable.getModel());
 		priorityTable.setRowSorter(prioSorter);
 
-		priorityTable.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				int row = priorityTable.getSelectedRow();
-				if (row == -1) {
-					return;
-				}
-				int count = categoryTable.getRowCount();
-				categoryTable.removeRowSelectionInterval(0, count - 1);
-				if (row == 0) {
-					int selectedID = 0;
-					controller.getPriority(selectedID);
-				} else {
-					Priority prio = (Priority) priorityTable.getValueAt(row, 0);
-					int selectedID = prio.getId();
-					controller.getPriority(selectedID);
-				}
-			}
-		});
-
 		jtodoTableModelTask = new JtodoTableModel();
 		taskTable = new JTable(jtodoTableModelTask);
 		taskTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-		jtodoTableModelTask.addTableModelListener(new TableModelListener() {
-
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				int row = e.getFirstRow();
-				if (e.getColumn() == 5 || e.getColumn() == 0
-						|| e.getColumn() == 1) {
-					Task task = jtodoTableModelTask.getValueAtRow(row);
-					controller.update(task);
-				}
-			}
-		});
 
 		TableColumn taskCol = taskTable.getColumnModel().getColumn(0);
 		taskCol.setPreferredWidth(150);
@@ -265,19 +240,6 @@ public class JtodoView extends JFrame implements Observer {
 		archivTable = new JTable(jtodoTableModelArchiv);
 		archivTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		jtodoTableModelArchiv.addTableModelListener(new TableModelListener() {
-
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				int row = e.getFirstRow();
-				if (e.getColumn() == 5 || e.getColumn() == 0
-						|| e.getColumn() == 1) {
-					Task task = jtodoTableModelArchiv.getValueAtRow(row);
-					controller.update(task);
-				}
-			}
-		});
-
 		TableColumn archivCol = archivTable.getColumnModel().getColumn(0);
 		archivCol.setPreferredWidth(150);
 		archivCol = archivTable.getColumnModel().getColumn(1);
@@ -297,6 +259,74 @@ public class JtodoView extends JFrame implements Observer {
 
 		JButton addTaskButton = new JButton("Task adden");
 
+		/**
+		 * MouseListener um den Filter der categoryTable zu setzen und die
+		 * gewünschte Category anzeigt in der Taskliste
+		 */
+		categoryTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = categoryTable.getSelectedRow();
+				if (row == -1) {
+					return;
+				}
+				int count = priorityTable.getRowCount();
+				priorityTable.removeRowSelectionInterval(0, count - 1);
+				if (row == 0) {
+					int selectedID = 0;
+					controller.getCategory(selectedID);
+				} else {
+					Category cat = (Category) categoryTable.getValueAt(row, 0);
+					int selectedID = cat.getId();
+					controller.getCategory(selectedID);
+				}
+			}
+		});
+
+		/**
+		 * MouseListener um den Filter der priorityTable zu setzen und die
+		 * gewünschte Priority anzeigt in der Taskliste
+		 */
+		priorityTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				int row = priorityTable.getSelectedRow();
+				if (row == -1) {
+					return;
+				}
+				int count = categoryTable.getRowCount();
+				categoryTable.removeRowSelectionInterval(0, count - 1);
+				if (row == 0) {
+					int selectedID = 0;
+					controller.getPriority(selectedID);
+				} else {
+					Priority prio = (Priority) priorityTable.getValueAt(row, 0);
+					int selectedID = prio.getId();
+					controller.getPriority(selectedID);
+				}
+			}
+		});
+
+		/**
+		 * TableModelListener der Taskliste, welcher eine Änderung der Tabelle
+		 * feststellt und den geänderten Task updatet
+		 */
+		jtodoTableModelTask.addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				int row = e.getFirstRow();
+				if (e.getColumn() == 5 || e.getColumn() == 0
+						|| e.getColumn() == 1) {
+					Task task = jtodoTableModelTask.getValueAtRow(row);
+					controller.update(task);
+				}
+			}
+		});
+
+		/**
+		 * ActionListener welcher beim Hinzufügen eines Tasks die gewünsche
+		 * Create Funktion aufruft aus dem Controller und anschliessend die
+		 * Felder wieder cleart
+		 */
 		addTaskButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -322,12 +352,22 @@ public class JtodoView extends JFrame implements Observer {
 				clearTaskComponents();
 			}
 
-			private void clearTaskComponents() {
-				newTaskNameField.setText(null);
-				newTaskDescriptionField.setText(null);
-				categoryBox.setSelectedIndex(0);
-				prioBox.setSelectedIndex(0);
-				dateChooser.setDate(new Date());
+		});
+
+		/**
+		 * TableModelListener vom Archiv, welcher eine Änderung der Tabelle
+		 * feststellt und den geänderten Task updatet
+		 */
+		jtodoTableModelArchiv.addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				int row = e.getFirstRow();
+				if (e.getColumn() == 5 || e.getColumn() == 0
+						|| e.getColumn() == 1) {
+					Task task = jtodoTableModelArchiv.getValueAtRow(row);
+					controller.update(task);
+				}
 			}
 		});
 
@@ -455,14 +495,34 @@ public class JtodoView extends JFrame implements Observer {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Cleart alle Felder des newTask Tabs
+	 */
+	private void clearTaskComponents() {
+		newTaskNameField.setText(null);
+		newTaskDescriptionField.setText(null);
+		categoryBox.setSelectedIndex(0);
+		prioBox.setSelectedIndex(0);
+		dateChooser.setDate(new Date());
+	}
+
+	/**
+	 * setzt den GUIController für das GUI
+	 */
 	public void SetController(GUIController controller) {
 		this.controller = controller;
 	}
 
+	/**
+	 * setzt das Model für das GUI
+	 */
 	public void setModel(IDataHandler model) {
 		this.model = model;
 	}
 
+	/**
+	 * nach Update der categoryList die entsprechenden Elemente hinzufügen
+	 */
 	public void updateCategoryList(List<Category> categoryList) {
 
 		for (Category category : categoryList) {
@@ -471,6 +531,9 @@ public class JtodoView extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * nach Update der priorityList die entsprechenden Elemente hinzufügen
+	 */
 	public void updatePriorityList(List<Priority> priorityList) {
 
 		for (Priority priority : priorityList) {
@@ -479,6 +542,10 @@ public class JtodoView extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * nach Update der archivList alle Elemente löschen und die entsprechenden
+	 * Elemente wieder hinzufügen
+	 */
 	public void updateTaskList(List<Task> taskList) {
 		jtodoTableModelTask.removeAllTasks();
 
@@ -486,13 +553,21 @@ public class JtodoView extends JFrame implements Observer {
 		taskCount.setText(jtodoTableModelTask.getRowCount() + " Tasks");
 	}
 
+	/**
+	 * nach Update der archivList alle Elemente löschen und die entsprechenden
+	 * Elemente wieder hinzufügen
+	 */
 	public void updateArchivList(List<Task> archivList) {
 		jtodoTableModelArchiv.removeAllTasks();
+
 		jtodoTableModelArchiv.addTaskList(archivList);
 		archivCount.setText(jtodoTableModelArchiv.getRowCount()
 				+ " abgeschlossene Tasks");
 	}
 
+	/**
+	 * update Methode um die Objekte zu notifizieren
+	 */
 	@Override
 	public void update(Observable arg0, Object element) {
 		// Use this to update Tasks and Categorys
