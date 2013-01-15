@@ -13,6 +13,7 @@ import ch.zhaw.jtodo.dao.hibernate.TaskHibernateDAO;
  * @author yannik
  */
 public class DAOFactory implements IDAOFactory {
+	
 
 	/**
 	 * Returns ICategoryDAO

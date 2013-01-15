@@ -32,7 +32,6 @@ public class DataHandler extends Observable implements IDataHandler {
 	public void getAllTasks() {
 		List<Task> taskList = daoFactory.getTaskDAO().findAll();
 		notify(taskList);
-
 	}
 
 	private void notify(Object element) {
@@ -50,12 +49,6 @@ public class DataHandler extends Observable implements IDataHandler {
 	public void getAllPrioritys() {
 		List<Priority> priorityList = daoFactory.getPriorityDAO().findAll();
 		notify(priorityList);
-	}
-
-	@Override
-	public Task getSpecificTask() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

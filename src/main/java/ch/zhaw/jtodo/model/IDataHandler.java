@@ -10,13 +10,11 @@ public interface IDataHandler {
 
 	public void getAllTasks();
 
-	public Task getSpecificTask();
-
 	public void getAllCategorys();
 
 	public void getAllPrioritys();
 
-	public void getTaskByCategory(int id);
+	public void getTaskByCategory(int catID);
 
 	public void updateTask(Task task);
 
