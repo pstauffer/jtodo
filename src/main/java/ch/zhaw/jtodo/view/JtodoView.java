@@ -82,6 +82,7 @@ public class JtodoView extends JFrame implements Observer {
 	private JPanel NewTaskPanel;
 	private JPanel TaskListPanel;
 	private JPanel AboutPanel;
+	private JPanel ArchivPanel;
 
 	public JtodoView(IDataHandler model) {
 		this.model = model;
@@ -96,10 +97,12 @@ public class JtodoView extends JFrame implements Observer {
 
 		JMenu fileMenu = new JMenu("Menu");
 		menuBar.add(fileMenu);
-		JMenuItem taskListMenuItem = new JMenuItem("Tasklist");
-		fileMenu.add(taskListMenuItem);
 		JMenuItem newTaskMenuItem = new JMenuItem("New Task");
 		fileMenu.add(newTaskMenuItem);
+		JMenuItem taskListMenuItem = new JMenuItem("Tasklist");
+		fileMenu.add(taskListMenuItem);
+		JMenuItem archivListMenuItem = new JMenuItem("Archivlist");
+		fileMenu.add(archivListMenuItem);
 		JMenuItem closeMenuItem = new JMenuItem("Close");
 		fileMenu.add(closeMenuItem);
 
@@ -147,6 +150,17 @@ public class JtodoView extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				tabs.setSelectedComponent(TaskListPanel);
+			}
+		});
+
+		/**
+		 * ActionListener um die archivList Option abzufangen und das Tab zu
+		 * wechseln
+		 */
+		archivListMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabs.setSelectedComponent(ArchivPanel);
 			}
 		});
 
@@ -384,7 +398,7 @@ public class JtodoView extends JFrame implements Observer {
 		AboutPanel = new JPanel();
 		AboutPanel.setLayout(null);
 
-		JPanel ArchivPanel = new JPanel();
+		ArchivPanel = new JPanel();
 		ArchivPanel.setLayout(new BorderLayout(0, 0));
 
 		tabs.addTab("Task Liste", TaskListPanel);
