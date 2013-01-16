@@ -10,6 +10,9 @@ import ch.zhaw.jtodo.domain.Priority;
  */
 public class PriorityHibernateDAO extends GenericHibernateDAO<Priority, Integer> implements  IPriorityDAO {
 
+	/**
+	 * Default Konstruktor, ruft super Klasse mit BO Klassentyp auf
+	 */
 	public PriorityHibernateDAO() {
 		super(Priority.class);
 	}

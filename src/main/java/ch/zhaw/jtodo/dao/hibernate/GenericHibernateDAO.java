@@ -17,9 +17,10 @@ import ch.zhaw.jtodo.domain.Category;
 /**
  * 
  * @author yannik
- *
- * @param <T>
- * @param <ID>
+ * Diese Klasse stellt generisch alle Methoden bereit die allgemein von
+ * HibernateDAO's verwendet werden.
+ * @param <T> spezifische Klasse
+ * @param <ID> typ des PrimaryKeys
  */
 public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		implements IGenericDAO<T, ID> {
@@ -29,18 +30,26 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	private Session session;
 	
 	/**
-	 * 
+	 * Default Konstruktor, definiert den spezifischen Typ
 	 * @param type
 	 */
 	public GenericHibernateDAO(Class<T> type) {
 		this.persistentClass = type;
 	}
 	
+	/**
+	 * Session injection
+	 * @param s Hibernate Session
+	 */
     @SuppressWarnings("unchecked")
     public void setSession(Session s) {
         this.session = s;
     }
  
+    /**
+     * Returniert die aktuelle Hibernate Ession
+     * @return aktuelle Hibernate Session
+     */
     protected Session getSession() {
         if (session == null)
             throw new IllegalStateException("Session has not been set on DAO before usage");
@@ -48,16 +57,13 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 	
 	/**
-	 * 
-	 * @return
+	 * Gibt die typisierte Klasse des generischen DAOs zurück
+	 * @return Klassenname
 	 */
 	public Class<T> getPersistentClass() {
 		return persistentClass;
 	}
 	
-	/**
-	 * Findet ein BusinessObject mithilfe seiner eindeutigen ID
-	 */
 	@SuppressWarnings("unchecked")
 	public T findById(ID id) {
 		T entity;
@@ -78,9 +84,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         }
 	}
 
-	/**
-	 * Finds all businessObject of type on the db and returns them in a list
-	 */
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
 		Criteria criteria = session.createCriteria(this.persistentClass);
@@ -89,10 +92,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		return returnList;
 	}
 	
-	/**
-	 * Schreibt ein BusinessObject persistent auf die Datenbank, dies geschieht
-	 * konkret über Hibernate 
-	 */
 	@SuppressWarnings("unchecked")
 	public T  write(T businessObject) throws Exception{
 		 Transaction tx = null;
@@ -120,10 +119,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 		}
 	}
 	
-	/**
-	 * Löscht ein BusinessObject auf der DB, dafür wird die Hibernate SessionFactory
-	 * verwendet um eine neue Session zu erzeugen
-	 */
 	public void delete(T entity) throws Exception {
 		 Transaction tx = null;
 		 try {
@@ -138,9 +133,9 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 	}
 	
 	/**
-	 * 
-	 * @param criterion
-	 * @return
+	 * Sucht BO nach einem spezifisch definierten Kriterium
+	 * @param criterion definiertes Kriterium
+	 * @return Liste mit gefundenen BO's
 	 */
 	protected List<T> findByCriteria(Criterion criterion) {
 		Criteria crit = session.createCriteria(getPersistentClass());

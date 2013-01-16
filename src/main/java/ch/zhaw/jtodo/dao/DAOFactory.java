@@ -14,37 +14,24 @@ import ch.zhaw.jtodo.dao.hibernate.TaskHibernateDAO;
  */
 public class DAOFactory implements IDAOFactory {
 	
-
-	/**
-	 * Returns ICategoryDAO
-	 */
 	public ICategoryDAO getCategoryDAO() {
 		CategoryHibernateDAO dao = new CategoryHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 
-	/**
-	 * Returns IReminderDAO
-	 */
 	public IReminderDAO getReminderDAO() {
 		ReminderHibernateDAO dao = new ReminderHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 
-	/**
-	 * Returns IPriorityDAO
-	 */
 	public IPriorityDAO getPriorityDAO() {
 		PriorityHibernateDAO dao = new PriorityHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());
 		return (dao);
 	}
 
-	/**
-	 * Returns ITaskDAO
-	 */
 	public ITaskDAO getTaskDAO() {
 		TaskHibernateDAO dao = new TaskHibernateDAO();
 		dao.setSession(HibernateUtil.getSession());

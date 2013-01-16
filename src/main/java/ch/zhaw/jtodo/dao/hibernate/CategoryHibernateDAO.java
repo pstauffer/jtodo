@@ -12,6 +12,9 @@ import ch.zhaw.jtodo.domain.Category;
  */
 public class CategoryHibernateDAO extends GenericHibernateDAO<Category, Integer> implements  ICategoryDAO { 
 	
+	/**
+	 * Default Konstruktor, ruft super Klasse mit BO Klassentyp auf
+	 */
 	public CategoryHibernateDAO() {
 		super(Category.class);
 	}

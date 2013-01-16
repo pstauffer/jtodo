@@ -11,6 +11,9 @@ import ch.zhaw.jtodo.domain.Reminder;
  */
 public class ReminderHibernateDAO extends GenericHibernateDAO<Reminder, Integer> implements  IReminderDAO{
 	
+	/**
+	 * Default Konstruktor, ruft super Klasse mit BO Klassentyp auf
+	 */
 	public ReminderHibernateDAO() {
 		super(Reminder.class);
 	}

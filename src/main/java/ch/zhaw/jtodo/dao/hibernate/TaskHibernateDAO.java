@@ -17,7 +17,10 @@ import ch.zhaw.jtodo.domain.Task;
  */
 public class TaskHibernateDAO extends GenericHibernateDAO<Task, Integer>
 		implements ITaskDAO {
-
+	
+	/**
+	 * Default Konstruktor, ruft super Klasse mit BO Klassentyp auf
+	 */
 	public TaskHibernateDAO() {
 		super(Task.class);
 	}
