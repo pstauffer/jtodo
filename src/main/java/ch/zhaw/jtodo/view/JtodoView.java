@@ -563,6 +563,9 @@ public class JtodoView extends JFrame implements Observer {
 	public void updateTaskList(List<Task> taskList) {
 		jtodoTableModelTask.removeAllTasks();
 
+		if (taskList.size() == 0) {
+			return;
+		}
 		jtodoTableModelTask.addTaskList(taskList);
 		taskCount.setText(jtodoTableModelTask.getRowCount() + " Tasks");
 	}
@@ -573,6 +576,10 @@ public class JtodoView extends JFrame implements Observer {
 	 */
 	public void updateArchivList(List<Task> archivList) {
 		jtodoTableModelArchiv.removeAllTasks();
+
+		if (archivList.size() == 0) {
+			return;
+		}
 
 		jtodoTableModelArchiv.addTaskList(archivList);
 		archivCount.setText(jtodoTableModelArchiv.getRowCount()

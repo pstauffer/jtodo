@@ -2,74 +2,81 @@ package ch.zhaw.jtodo.domain;
 
 import java.util.Date;
 
-
 /**
  * 
- * @author yk
- *
+ * Klasse fŸr das Reminder Object
+ * 
+ * @author yannik
  */
-public class Reminder  implements java.io.Serializable {
+public class Reminder implements java.io.Serializable {
 
+	private int id;
+	private Date date;
+	private Integer taskid;
 
-    // Fields    
+	/**
+	 * default constructor fŸr das reminder object
+	 */
+	public Reminder() {
+	}
 
-     private int id;
-     private Date date;
-     private Integer taskid;
+	/**
+	 * miniamler constructor fŸr das reminder object mit id als parameter
+	 */
+	public Reminder(int id) {
+		this.id = id;
+	}
 
+	/**
+	 * kompletter constructor fŸr das reminder object mit id, datum und taskid
+	 * als parameter
+	 */
+	public Reminder(int id, Date date, Integer taskid) {
+		this.id = id;
+		this.date = date;
+		this.taskid = taskid;
+	}
 
-    // Constructors
+	/**
+	 * gibt mir die id des reminder object zurŸck
+	 */
+	public int getId() {
+		return this.id;
+	}
 
-    /** default constructor */
-    public Reminder() {
-    }
+	/**
+	 * setzt mir die id des reminder object
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 
-	/** minimal constructor */
-    public Reminder(int id) {
-        this.id = id;
-    }
-    
-    /** full constructor */
-    public Reminder(int id, Date date, Integer taskid) {
-        this.id = id;
-        this.date = date;
-        this.taskid = taskid;
-    }
-    
+	/**
+	 * gibt mir das datum des reminder object zurŸck
+	 */
+	public Date getDate() {
+		return this.date;
+	}
 
-   
-    // Property accessors
+	/**
+	 * setzt mir das datum des reminder object
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
-    public int getId() {
-        return this.id;
-    }
-    
-    public void setId(int id) {
-        this.id = id;
-    }
+	/**
+	 * gibt mir die taskid des reminder object zurŸck
+	 */
+	public Integer getTaskid() {
+		return this.taskid;
+	}
 
-    public Date getDate() {
-        return this.date;
-    }
-    
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Integer getTaskid() {
-        return this.taskid;
-    }
-    
-    public void setTaskid(Integer taskid) {
-        this.taskid = taskid;
-    }
-   
-
-
-
-
-
-
-
+	/**
+	 * setzt mir die taskid des reminder object
+	 */
+	public void setTaskid(Integer taskid) {
+		this.taskid = taskid;
+	}
 
 }
