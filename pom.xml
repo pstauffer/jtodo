@@ -54,6 +54,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<included.packages>-Dincluded.packages=ch.zhaw.jtodo</included.packages>
+	<included.adapters>-Dincluded.adapters=coverage,complexity,dependency</included.adapters>
   </properties>
 
 
