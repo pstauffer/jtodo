@@ -9,31 +9,8 @@
 
   <build>
     <defaultGoal>install</defaultGoal>
-<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy.hpi.task</id>
-						<phase>package</phase>
-						<configuration>
-							<tasks verbose="true">
-								<property name="temp" value="target/temp" />
-								<property name="serenity.jar" value="target/serenity.jar" />
-								<property name="manifest" value="src/main/resources/META-INF/MANIFEST.MF" />
 
-								<echo message="Unpacking and repacking serenity.jar with the agent manifest" />
-								<unjar src="${serenity.jar}" dest="${temp}" overwrite="true" />
-								<jar destfile="${serenity.jar}" basedir="${temp}" manifest="${manifest}" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+<plugins>
    <plugin>
      <groupId>org.codehaus.mojo</groupId>
      <artifactId>cobertura-maven-plugin</artifactId>
@@ -46,30 +23,11 @@
       </instrumentation>
      </configuration>
    </plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<xmlOutput>true</xmlOutput>
-					<findbugsXmlOutput>true</findbugsXmlOutput>
-					<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-					<xmlOutputDirectory>serenity</xmlOutputDirectory>
-				</configuration>
-			</plugin>
 		</plugins>
   </build>
 
   <name>mdp_jtodo</name>
   <url>http://maven.apache.org</url>
-
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<included.packages>-Dincluded.packages=ch.zhaw.jtodo</included.packages>
-	<included.adapters>-Dincluded.adapters=coverage,complexity,dependency</included.adapters>
-  </properties>
-
 
 
   <dependencies>
