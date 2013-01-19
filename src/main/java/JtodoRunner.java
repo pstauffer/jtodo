@@ -7,7 +7,7 @@ import ch.zhaw.jtodo.view.JtodoView;
  * 
  * Runner MainClass for JToDo
  * 
- * @author pascal
+ * @author pascal stauffer
  */
 public class JtodoRunner {
 
