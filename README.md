@@ -1,4 +1,5 @@
-mdp_jtodo
+jtodo
 =========
-
-JToDo for MdP Project
+* school project
+* first java applicaton
+* simple todo list
